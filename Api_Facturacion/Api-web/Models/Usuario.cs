@@ -16,7 +16,5 @@ namespace Api_web.Models
         public DateTime FechaCreacion { get; set; }
         public DateTime? UltimoAcceso { get; set; }
         public string Estado { get; set; }
-
-        public virtual Rol Rol { get; set; }
     }
 }

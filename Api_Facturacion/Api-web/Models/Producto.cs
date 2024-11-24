@@ -22,9 +22,5 @@ namespace Api_web.Models
         public string Estado { get; set; }
         public string Foto { get; set; }
         public DateTime? FechaModificacion { get; set; }
-
-        public virtual Categoria Categoria { get; set; }
-        public virtual Subcategoria Subcategoria { get; set; }
-        public virtual Marca Marca { get; set; }
     }
 }
