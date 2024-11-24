@@ -1,9 +1,11 @@
-﻿using Api_web.Models;
+﻿using Api_web.DTO.Marca;
+using Api_web.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace Api_web.Repositories
@@ -75,36 +77,62 @@ namespace Api_web.Repositories
             return marcas;
         }
 
-        public void Add(Marca marca)
+        public Marca Add(CreateMarcaRequest request)
         {
+            Marca nuevaMarca = null;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = @"INSERT INTO Marcas (nombre) 
-                                 VALUES (@Nombre);
-                                 SELECT SCOPE_IDENTITY();";
-                SqlCommand command = new SqlCommand(query, connection);
+                try
+                {
+                    connection.Open();
 
-                command.Parameters.AddWithValue("@Nombre", marca.Nombre);
+                    string query = @"INSERT INTO Marcas (nombre) 
+                                     VALUES (@Nombre);
+                                     SELECT SCOPE_IDENTITY();";
 
-                connection.Open();
-                marca.Id = Convert.ToInt32(command.ExecuteScalar());
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Nombre", request.Nombre);
+
+                        int newId = Convert.ToInt32(command.ExecuteScalar());
+
+                        nuevaMarca = new Marca
+                        {
+                            Id = newId,
+                            Nombre = request.Nombre
+                        };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al agregar la marca: {ex.Message}");
+                }
             }
+            return nuevaMarca;
         }
 
-        public void Update(Marca marca)
+        public void Update(int id, UpdateMarcaRequest request)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = @"UPDATE Marcas 
-                                 SET nombre = @Nombre
-                                 WHERE id_marca = @Id";
-                SqlCommand command = new SqlCommand(query, connection);
+                try
+                {
+                    connection.Open();
 
-                command.Parameters.AddWithValue("@Nombre", marca.Nombre);
-                command.Parameters.AddWithValue("@Id", marca.Id);
+                    string query = @"UPDATE Marcas 
+                                     SET nombre = @Nombre
+                                     WHERE id_marca = @Id";
 
-                connection.Open();
-                command.ExecuteNonQuery();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Nombre", request.Nombre);
+                        command.Parameters.AddWithValue("@Id", id);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al actualizar la marca: {ex.Message}");
+                }
             }
         }
 
