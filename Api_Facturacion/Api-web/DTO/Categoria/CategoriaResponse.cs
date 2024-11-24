@@ -7,5 +7,7 @@ namespace Api_web.DTO.Categoria
 {
     public class CategoriaResponse
     {
+        public int Id { get; set; }
+        public string Nombre { get; set; }
     }
 }
