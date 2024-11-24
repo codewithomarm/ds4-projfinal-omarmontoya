@@ -157,6 +157,21 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="DTO\Categoria\CategoriaResponse.cs" />
+    <Compile Include="DTO\Categoria\CreateCategoriaRequest.cs" />
+    <Compile Include="DTO\Categoria\UpdateCategoriaRequest.cs" />
+    <Compile Include="DTO\Marca\CreateMarcaRequest.cs" />
+    <Compile Include="DTO\Marca\MarcaResponse.cs" />
+    <Compile Include="DTO\Marca\UpdateMarcaRequest.cs" />
+    <Compile Include="DTO\Producto\CreateProductoRequest.cs" />
+    <Compile Include="DTO\Producto\ProductoResponse.cs" />
+    <Compile Include="DTO\Producto\UpdateProductoRequest.cs" />
+    <Compile Include="DTO\Subcategoria\SubcategoriaResponse.cs" />
+    <Compile Include="DTO\Subcategoria\CreateSubcategoriaRequest.cs" />
+    <Compile Include="DTO\Subcategoria\UpdateSubcategoriaRequest.cs" />
+    <Compile Include="DTO\Usuario\CreateUsuarioRequest.cs" />
+    <Compile Include="DTO\Usuario\UpdateUsuarioRequest.cs" />
+    <Compile Include="DTO\Usuario\UsuarioResponse.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -167,6 +182,8 @@
     <Compile Include="Models\Subcategoria.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\MarcaRepository.cs" />
+    <Compile Include="Repositories\ProductoRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />

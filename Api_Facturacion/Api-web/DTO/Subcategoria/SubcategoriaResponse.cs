@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Api_web.DTO.Subcategoria
 {
-    public class CategoriaResponse
+    public class SubcategoriaResponse
     {
     }
 }
