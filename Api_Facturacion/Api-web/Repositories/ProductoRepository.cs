@@ -1,4 +1,5 @@
-﻿using Api_web.Models;
+﻿using Api_web.DTO.Producto;
+using Api_web.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -117,40 +118,115 @@ namespace Api_web.Repositories
             return productos;
         }
 
-        public void Add(Producto producto)
+        public Producto Add(CreateProductoRequest request, int categoriaId, int subcategoriaId, int marcaId)
         {
+            Producto nuevoProducto = null;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = @"INSERT INTO Productos (nombre, descripcion, id_categoria, id_subcategoria, id_marca, unidad_medida, cantidad, precio, stock, codigo_barras, fecha_creacion, estado, foto) 
-                                 VALUES (@Nombre, @Descripcion, @CategoriaId, @SubcategoriaId, @MarcaId, @UnidadMedida, @Cantidad, @Precio, @Stock, @CodigoBarras, @FechaCreacion, @Estado, @Foto);
-                                 SELECT SCOPE_IDENTITY();";
-                SqlCommand command = new SqlCommand(query, connection);
+                try
+                {
+                    connection.Open();
 
-                AddParametersToCommand(command, producto);
+                    string query = @"INSERT INTO Productos (nombre, descripcion, id_categoria, id_subcategoria, id_marca, 
+                                     unidad_medida, cantidad, precio, stock, codigo_barras, fecha_creacion, estado, foto) 
+                                     VALUES (@Nombre, @Descripcion, @CategoriaId, @SubcategoriaId, @MarcaId, @UnidadMedida, 
+                                     @Cantidad, @Precio, @Stock, @CodigoBarras, @FechaCreacion, @Estado, @Foto);
+                                     SELECT SCOPE_IDENTITY();";
 
-                connection.Open();
-                producto.Id = Convert.ToInt32(command.ExecuteScalar());
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Nombre", request.Nombre);
+                        command.Parameters.AddWithValue("@Descripcion", (object)request.Descripcion ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@CategoriaId", categoriaId);
+                        command.Parameters.AddWithValue("@SubcategoriaId", subcategoriaId);
+                        command.Parameters.AddWithValue("@MarcaId", marcaId);
+                        command.Parameters.AddWithValue("@UnidadMedida", request.UnidadMedida);
+                        command.Parameters.AddWithValue("@Cantidad", request.Cantidad);
+                        command.Parameters.AddWithValue("@Precio", request.Precio);
+                        command.Parameters.AddWithValue("@Stock", request.Stock);
+                        command.Parameters.AddWithValue("@CodigoBarras", request.CodigoBarras);
+                        command.Parameters.AddWithValue("@FechaCreacion", DateTime.Now);
+                        command.Parameters.AddWithValue("@Estado", "activo");
+                        command.Parameters.AddWithValue("@Foto", (object)request.Foto ?? DBNull.Value);
+
+                        int newId = Convert.ToInt32(command.ExecuteScalar());
+
+                        nuevoProducto = new Producto
+                        {
+                            Id = newId,
+                            Nombre = request.Nombre,
+                            Descripcion = request.Descripcion,
+                            CategoriaId = categoriaId,
+                            SubcategoriaId = subcategoriaId,
+                            MarcaId = marcaId,
+                            UnidadMedida = request.UnidadMedida,
+                            Cantidad = request.Cantidad,
+                            Precio = request.Precio,
+                            Stock = request.Stock,
+                            CodigoBarras = request.CodigoBarras,
+                            FechaCreacion = DateTime.Now,
+                            Estado = "activo",
+                            Foto = request.Foto
+                        };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al agregar el producto: {ex.Message}");
+                }
             }
+            return nuevoProducto;
         }
 
-        public void Update(Producto producto)
+        public void Update(int id, UpdateProductoRequest request, int categoriaId, int subcategoriaId, int marcaId)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = @"UPDATE Productos 
-                                 SET nombre = @Nombre, descripcion = @Descripcion, id_categoria = @CategoriaId, 
-                                     id_subcategoria = @SubcategoriaId, id_marca = @MarcaId, unidad_medida = @UnidadMedida, 
-                                     cantidad = @Cantidad, precio = @Precio, stock = @Stock, codigo_barras = @CodigoBarras, 
-                                     estado = @Estado, foto = @Foto, fecha_modificacion = @FechaModificacion
-                                 WHERE id_producto = @Id";
-                SqlCommand command = new SqlCommand(query, connection);
+                try
+                {
+                    connection.Open();
 
-                AddParametersToCommand(command, producto);
-                command.Parameters.AddWithValue("@Id", producto.Id);
-                command.Parameters.AddWithValue("@FechaModificacion", DateTime.Now);
+                    string query = @"UPDATE Productos 
+                                     SET nombre = @Nombre, 
+                                         descripcion = @Descripcion, 
+                                         id_categoria = @CategoriaId, 
+                                         id_subcategoria = @SubcategoriaId, 
+                                         id_marca = @MarcaId, 
+                                         unidad_medida = @UnidadMedida, 
+                                         cantidad = @Cantidad, 
+                                         precio = @Precio, 
+                                         stock = @Stock, 
+                                         codigo_barras = @CodigoBarras, 
+                                         estado = @Estado, 
+                                         foto = @Foto, 
+                                         fecha_modificacion = @FechaModificacion
+                                     WHERE id_producto = @Id";
 
-                connection.Open();
-                command.ExecuteNonQuery();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Id", id);
+                        command.Parameters.AddWithValue("@Nombre", request.Nombre);
+                        command.Parameters.AddWithValue("@Descripcion", (object)request.Descripcion ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@CategoriaId", categoriaId);
+                        command.Parameters.AddWithValue("@SubcategoriaId", subcategoriaId);
+                        command.Parameters.AddWithValue("@MarcaId", marcaId);
+                        command.Parameters.AddWithValue("@UnidadMedida", request.UnidadMedida);
+                        command.Parameters.AddWithValue("@Cantidad", request.Cantidad);
+                        command.Parameters.AddWithValue("@Precio", request.Precio);
+                        command.Parameters.AddWithValue("@Stock", request.Stock);
+                        command.Parameters.AddWithValue("@CodigoBarras", request.CodigoBarras);
+                        command.Parameters.AddWithValue("@Estado", request.Estado);
+                        command.Parameters.AddWithValue("@Foto", (object)request.Foto ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@FechaModificacion", DateTime.Now);
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al actualizar el producto: {ex.Message}");
+                    throw; // Re-throw the exception to be handled by the upper layer
+                }
             }
         }
 
