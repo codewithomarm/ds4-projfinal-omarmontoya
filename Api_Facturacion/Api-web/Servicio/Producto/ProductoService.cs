@@ -238,9 +238,26 @@ namespace Api_web.Servicio.Producto
                 Id = producto.Id,
                 Nombre = producto.Nombre,
                 Descripcion = producto.Descripcion,
-                Categoria = new CategoriaResponse { Id = categoria.Id, Nombre = categoria.Nombre },
-                Subcategoria = new SubcategoriaResponse { Id = subcategoria.Id, Nombre = subcategoria.Nombre },
-                Marca = new MarcaResponse { Id = marca.Id, Nombre = marca.Nombre },
+                Categoria = new CategoriaResponse
+                { 
+                    Id = categoria.Id,
+                    Nombre = categoria.Nombre
+                },
+                Subcategoria = new SubcategoriaResponse
+                {
+                    Id = subcategoria.Id,
+                    Nombre = subcategoria.Nombre,
+                    Categoria = new CategoriaResponse
+                    {
+                        Id = categoria.Id,
+                        Nombre = categoria.Nombre
+                    }
+                },
+                Marca = new MarcaResponse
+                { 
+                    Id = marca.Id,
+                    Nombre = marca.Nombre
+                },
                 UnidadMedida = producto.UnidadMedida,
                 Cantidad = producto.Cantidad,
                 Precio = producto.Precio,
