@@ -179,6 +179,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\CategoriaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MarcaController.cs" />
     <Compile Include="DTO\Categoria\CategoriaResponse.cs" />
     <Compile Include="DTO\Categoria\CreateCategoriaRequest.cs" />
     <Compile Include="DTO\Categoria\UpdateCategoriaRequest.cs" />
@@ -212,6 +213,8 @@
     <Compile Include="Repositories\UsuarioRepository.cs" />
     <Compile Include="Servicio\Categoria\CategoriaService.cs" />
     <Compile Include="Servicio\Categoria\ICategoriaService.cs" />
+    <Compile Include="Servicio\Marca\IMarcaService.cs" />
+    <Compile Include="Servicio\Marca\MarcaService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />

@@ -115,24 +115,16 @@ namespace Api_web.Repositories
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                try
-                {
-                    connection.Open();
+                string query = @"UPDATE Marcas 
+                                SET nombre = @Nombre
+                                WHERE id_marca = @Id";
+                SqlCommand command = new SqlCommand(query, connection);
+                
+                command.Parameters.AddWithValue("@Nombre", request.Nombre);
+                command.Parameters.AddWithValue("@Id", id);
 
-                    string query = @"UPDATE Marcas 
-                                     SET nombre = @Nombre
-                                     WHERE id_marca = @Id";
-
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@Nombre", request.Nombre);
-                        command.Parameters.AddWithValue("@Id", id);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error al actualizar la marca: {ex.Message}");
-                }
+                connection.Open();
+                command.ExecuteNonQuery();
             }
         }
 
