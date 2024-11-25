@@ -35,7 +35,7 @@ namespace Api_web.Controllers
         }
 
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("{id:int}", Name = "GetCategoriaById")]
         public IHttpActionResult GetCategoriaById(int id)
         {
             try
@@ -89,7 +89,7 @@ namespace Api_web.Controllers
             try
             {
                 var nuevaCategoria = _categoriaService.CreateCategoria(request);
-                return CreatedAtRoute("DefaultApi", new { id = nuevaCategoria.Id }, nuevaCategoria);
+                return CreatedAtRoute("GetCategoriaById", new { id = nuevaCategoria.Id }, nuevaCategoria);
             }
             catch (InvalidOperationException ex)
             {
