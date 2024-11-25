@@ -54,6 +54,36 @@ namespace Api_web.Repositories
             return null;
         }
 
+        public List<Subcategoria> GetByName(string name)
+        {
+            List<Subcategoria> subcategorias = new List<Subcategoria>();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT * FROM Subcategorias WHERE nombre LIKE @Name";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Name", "%" + name + "%");
+
+                try
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        subcategorias.Add(MapToSubcategoria(reader));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al buscar subcategorías por nombre: {ex.Message}");
+                    throw;
+                }
+            }
+
+            return subcategorias;
+        }
+
         public Subcategoria Add(CreateSubcategoriaRequest request, int categoriaId)
         {
             Subcategoria nuevaSubcategoria = null;
