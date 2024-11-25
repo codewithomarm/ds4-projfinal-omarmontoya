@@ -100,6 +100,11 @@ namespace Api_web.Repositories
                             Id = newId,
                             Nombre = request.Nombre
                         };
+
+                        if (nuevaCategoria == null || nuevaCategoria.Id <= 0)
+                        {
+                            throw new Exception("No se pudo crear la categoría.");
+                        }
                     }
                 }
                 catch (Exception ex)
