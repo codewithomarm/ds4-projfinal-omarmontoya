@@ -180,6 +180,7 @@
     <Compile Include="Controllers\CategoriaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MarcaController.cs" />
+    <Compile Include="Controllers\SubcategoriaController.cs" />
     <Compile Include="DTO\Categoria\CategoriaResponse.cs" />
     <Compile Include="DTO\Categoria\CreateCategoriaRequest.cs" />
     <Compile Include="DTO\Categoria\UpdateCategoriaRequest.cs" />
@@ -215,6 +216,10 @@
     <Compile Include="Servicio\Categoria\ICategoriaService.cs" />
     <Compile Include="Servicio\Marca\IMarcaService.cs" />
     <Compile Include="Servicio\Marca\MarcaService.cs" />
+    <Compile Include="Servicio\Producto\IProductoService.cs" />
+    <Compile Include="Servicio\Producto\ProductoService.cs" />
+    <Compile Include="Servicio\Subcategoria\ISubcategoriaService.cs" />
+    <Compile Include="Servicio\Subcategoria\SubcategoriaService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
