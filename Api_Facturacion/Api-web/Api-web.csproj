@@ -180,7 +180,9 @@
     <Compile Include="Controllers\CategoriaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MarcaController.cs" />
+    <Compile Include="Controllers\ProductoController.cs" />
     <Compile Include="Controllers\SubcategoriaController.cs" />
+    <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="DTO\Categoria\CategoriaResponse.cs" />
     <Compile Include="DTO\Categoria\CreateCategoriaRequest.cs" />
     <Compile Include="DTO\Categoria\UpdateCategoriaRequest.cs" />
@@ -190,12 +192,16 @@
     <Compile Include="DTO\Producto\CreateProductoRequest.cs" />
     <Compile Include="DTO\Producto\ProductoResponse.cs" />
     <Compile Include="DTO\Producto\UpdateProductoRequest.cs" />
+    <Compile Include="DTO\Producto\UpdateStockRequest.cs" />
+    <Compile Include="DTO\Rol\RolResponse.cs" />
     <Compile Include="DTO\Subcategoria\SubcategoriaResponse.cs" />
     <Compile Include="DTO\Subcategoria\CreateSubcategoriaRequest.cs" />
     <Compile Include="DTO\Subcategoria\UpdateSubcategoriaRequest.cs" />
+    <Compile Include="DTO\Usuario\BuscarUsuarioRequest.cs" />
     <Compile Include="DTO\Usuario\CreateUsuarioRequest.cs" />
     <Compile Include="DTO\Usuario\UpdateUsuarioRequest.cs" />
     <Compile Include="DTO\Usuario\UsuarioResponse.cs" />
+    <Compile Include="DTO\Usuario\VerifyPasswordRequest.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -220,6 +226,8 @@
     <Compile Include="Servicio\Producto\ProductoService.cs" />
     <Compile Include="Servicio\Subcategoria\ISubcategoriaService.cs" />
     <Compile Include="Servicio\Subcategoria\SubcategoriaService.cs" />
+    <Compile Include="Servicio\Usuario\IUsuarioService.cs" />
+    <Compile Include="Servicio\Usuario\UsuarioService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
