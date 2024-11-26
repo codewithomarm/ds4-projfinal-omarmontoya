@@ -77,6 +77,38 @@ namespace Api_web.Repositories
             return null;
         }
 
+        public Empresa GetByNombre(string nombre)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT Id, RUC, Nombre FROM Empresas WHERE Nombre = @Nombre";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Nombre", nombre);
+
+                try
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        return new Empresa
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            RUC = reader["RUC"].ToString(),
+                            Nombre = reader["Nombre"].ToString()
+                        };
+                    }
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception
+                    throw new Exception($"Error al obtener la empresa con nombre {nombre}", ex);
+                }
+            }
+            return null;
+        }
+
         public Empresa Add(CreateEmpresaRequest empresaRequest)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))

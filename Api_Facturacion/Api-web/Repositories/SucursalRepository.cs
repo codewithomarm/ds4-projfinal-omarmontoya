@@ -1,4 +1,5 @@
-﻿using Api_web.Models;
+﻿using Api_web.DTO.Sucursal;
+using Api_web.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -90,27 +91,40 @@ namespace Api_web.Repositories
             return null;
         }
 
-        public void Add(Sucursal sucursal)
+        public Sucursal Add(CreateSucursalRequest sucursalRequest, int empresaId)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = @"INSERT INTO Sucursales (Nombre, Provincia, Distrito, Corregimiento, Urbanizacion, Calle, Local, EmpresaId) 
-                             VALUES (@Nombre, @Provincia, @Distrito, @Corregimiento, @Urbanizacion, @Calle, @Local, @EmpresaId);
-                             SELECT SCOPE_IDENTITY();";
+                         VALUES (@Nombre, @Provincia, @Distrito, @Corregimiento, @Urbanizacion, @Calle, @Local, @EmpresaId);
+                         SELECT CAST(SCOPE_IDENTITY() as int)";
                 SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@Nombre", sucursal.Nombre);
-                command.Parameters.AddWithValue("@Provincia", sucursal.Provincia);
-                command.Parameters.AddWithValue("@Distrito", sucursal.Distrito);
-                command.Parameters.AddWithValue("@Corregimiento", sucursal.Corregimiento);
-                command.Parameters.AddWithValue("@Urbanizacion", sucursal.Urbanizacion);
-                command.Parameters.AddWithValue("@Calle", sucursal.Calle);
-                command.Parameters.AddWithValue("@Local", (object)sucursal.Local ?? DBNull.Value);
-                command.Parameters.AddWithValue("@EmpresaId", sucursal.EmpresaId);
+                command.Parameters.AddWithValue("@Nombre", sucursalRequest.Nombre);
+                command.Parameters.AddWithValue("@Provincia", sucursalRequest.Provincia);
+                command.Parameters.AddWithValue("@Distrito", sucursalRequest.Distrito);
+                command.Parameters.AddWithValue("@Corregimiento", sucursalRequest.Corregimiento);
+                command.Parameters.AddWithValue("@Urbanizacion", sucursalRequest.Urbanizacion);
+                command.Parameters.AddWithValue("@Calle", sucursalRequest.Calle);
+                command.Parameters.AddWithValue("@Local", (object)sucursalRequest.Local ?? DBNull.Value);
+                command.Parameters.AddWithValue("@EmpresaId", empresaId);
 
                 try
                 {
                     connection.Open();
-                    sucursal.Id = Convert.ToInt32(command.ExecuteScalar());
+                    int id = (int)command.ExecuteScalar();
+
+                    return new Sucursal
+                    {
+                        Id = id,
+                        Nombre = sucursalRequest.Nombre,
+                        Provincia = sucursalRequest.Provincia,
+                        Distrito = sucursalRequest.Distrito,
+                        Corregimiento = sucursalRequest.Corregimiento,
+                        Urbanizacion = sucursalRequest.Urbanizacion,
+                        Calle = sucursalRequest.Calle,
+                        Local = sucursalRequest.Local,
+                        EmpresaId = empresaId
+                    };
                 }
                 catch (Exception ex)
                 {
@@ -120,25 +134,25 @@ namespace Api_web.Repositories
             }
         }
 
-        public void Update(Sucursal sucursal)
+        public void Update(UpdateSucursalRequest sucursalRequest, int empresaId)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = @"UPDATE Sucursales 
-                             SET Nombre = @Nombre, Provincia = @Provincia, Distrito = @Distrito, 
-                                 Corregimiento = @Corregimiento, Urbanizacion = @Urbanizacion, 
-                                 Calle = @Calle, Local = @Local, EmpresaId = @EmpresaId 
-                             WHERE Id = @Id";
+                         SET Nombre = @Nombre, Provincia = @Provincia, Distrito = @Distrito, 
+                             Corregimiento = @Corregimiento, Urbanizacion = @Urbanizacion, 
+                             Calle = @Calle, Local = @Local, EmpresaId = @EmpresaId 
+                         WHERE Id = @Id";
                 SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@Id", sucursal.Id);
-                command.Parameters.AddWithValue("@Nombre", sucursal.Nombre);
-                command.Parameters.AddWithValue("@Provincia", sucursal.Provincia);
-                command.Parameters.AddWithValue("@Distrito", sucursal.Distrito);
-                command.Parameters.AddWithValue("@Corregimiento", sucursal.Corregimiento);
-                command.Parameters.AddWithValue("@Urbanizacion", sucursal.Urbanizacion);
-                command.Parameters.AddWithValue("@Calle", sucursal.Calle);
-                command.Parameters.AddWithValue("@Local", (object)sucursal.Local ?? DBNull.Value);
-                command.Parameters.AddWithValue("@EmpresaId", sucursal.EmpresaId);
+                command.Parameters.AddWithValue("@Id", sucursalRequest.Id);
+                command.Parameters.AddWithValue("@Nombre", sucursalRequest.Nombre);
+                command.Parameters.AddWithValue("@Provincia", sucursalRequest.Provincia);
+                command.Parameters.AddWithValue("@Distrito", sucursalRequest.Distrito);
+                command.Parameters.AddWithValue("@Corregimiento", sucursalRequest.Corregimiento);
+                command.Parameters.AddWithValue("@Urbanizacion", sucursalRequest.Urbanizacion);
+                command.Parameters.AddWithValue("@Calle", sucursalRequest.Calle);
+                command.Parameters.AddWithValue("@Local", (object)sucursalRequest.Local ?? DBNull.Value);
+                command.Parameters.AddWithValue("@EmpresaId", empresaId);
 
                 try
                 {
@@ -146,13 +160,13 @@ namespace Api_web.Repositories
                     int rowsAffected = command.ExecuteNonQuery();
                     if (rowsAffected == 0)
                     {
-                        throw new Exception($"No se encontró la sucursal con Id {sucursal.Id}");
+                        throw new Exception($"No se encontró la sucursal con Id {sucursalRequest.Id}");
                     }
                 }
                 catch (Exception ex)
                 {
                     // Log the exception
-                    throw new Exception($"Error al actualizar la sucursal con Id {sucursal.Id}", ex);
+                    throw new Exception($"Error al actualizar la sucursal con Id {sucursalRequest.Id}", ex);
                 }
             }
         }

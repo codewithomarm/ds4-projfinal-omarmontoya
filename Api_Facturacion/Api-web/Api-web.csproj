@@ -183,6 +183,7 @@
     <Compile Include="Controllers\MarcaController.cs" />
     <Compile Include="Controllers\ProductoController.cs" />
     <Compile Include="Controllers\SubcategoriaController.cs" />
+    <Compile Include="Controllers\SucursalController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="DTO\Categoria\CategoriaResponse.cs" />
     <Compile Include="DTO\Categoria\CreateCategoriaRequest.cs" />
@@ -201,6 +202,9 @@
     <Compile Include="DTO\Subcategoria\SubcategoriaResponse.cs" />
     <Compile Include="DTO\Subcategoria\CreateSubcategoriaRequest.cs" />
     <Compile Include="DTO\Subcategoria\UpdateSubcategoriaRequest.cs" />
+    <Compile Include="DTO\Sucursal\CreateSucursalRequest.cs" />
+    <Compile Include="DTO\Sucursal\SucursalResponse.cs" />
+    <Compile Include="DTO\Sucursal\UpdateSucursalRequest.cs" />
     <Compile Include="DTO\Usuario\BuscarUsuarioRequest.cs" />
     <Compile Include="DTO\Usuario\CreateUsuarioRequest.cs" />
     <Compile Include="DTO\Usuario\UpdateUsuarioRequest.cs" />
@@ -239,6 +243,8 @@
     <Compile Include="Servicio\Producto\ProductoService.cs" />
     <Compile Include="Servicio\Subcategoria\ISubcategoriaService.cs" />
     <Compile Include="Servicio\Subcategoria\SubcategoriaService.cs" />
+    <Compile Include="Servicio\Sucursal\ISucursalService.cs" />
+    <Compile Include="Servicio\Sucursal\SucursalService.cs" />
     <Compile Include="Servicio\Usuario\IUsuarioService.cs" />
     <Compile Include="Servicio\Usuario\UsuarioService.cs" />
   </ItemGroup>
@@ -311,7 +317,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Servicio\Factura\" />
-    <Folder Include="Servicio\Sucursal\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\bootstrap.min.js.map" />
