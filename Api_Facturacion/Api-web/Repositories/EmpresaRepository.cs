@@ -1,4 +1,5 @@
-﻿using Api_web.Models;
+﻿using Api_web.DTO.Empresa;
+using Api_web.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -76,19 +77,29 @@ namespace Api_web.Repositories
             return null;
         }
 
-        public void Add(Empresa empresa)
+        public Empresa Add(CreateEmpresaRequest empresaRequest)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "INSERT INTO Empresas (RUC, Nombre) VALUES (@RUC, @Nombre); SELECT SCOPE_IDENTITY();";
+                string query = @"INSERT INTO Empresas (RUC, Nombre)
+                                VALUES (@RUC, @Nombre);
+                                SELECT CAST(SCOPE_IDENTITY() as int)";
                 SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@RUC", empresa.RUC);
-                command.Parameters.AddWithValue("@Nombre", empresa.Nombre);
+                command.Parameters.AddWithValue("@RUC", empresaRequest.RUC);
+                command.Parameters.AddWithValue("@Nombre", empresaRequest.Nombre);
 
                 try
                 {
                     connection.Open();
-                    empresa.Id = Convert.ToInt32(command.ExecuteScalar());
+                    int id = (int)command.ExecuteScalar();
+
+                    // Crear y retornar el objeto Empresa completo
+                    return new Empresa
+                    {
+                        Id = id,
+                        RUC = empresaRequest.RUC,
+                        Nombre = empresaRequest.Nombre
+                    };
                 }
                 catch (Exception ex)
                 {
@@ -98,7 +109,7 @@ namespace Api_web.Repositories
             }
         }
 
-        public void Update(Empresa empresa)
+            public void Update(UpdateEmpresaRequest empresa)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
