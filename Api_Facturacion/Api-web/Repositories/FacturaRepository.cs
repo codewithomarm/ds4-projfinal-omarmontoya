@@ -1,4 +1,5 @@
-﻿using Api_web.Models;
+﻿using Api_web.DTO.Factura;
+using Api_web.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -97,7 +98,7 @@ namespace Api_web.Repositories
             return null;
         }
 
-        public int Add(Factura factura)
+        public int Add(CreateFacturaRequest facturaRequest, int empresaId, int sucursalId, List<FacturaProducto> productos)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -107,23 +108,22 @@ namespace Api_web.Repositories
                 try
                 {
                     string query = @"INSERT INTO Facturas (EmpresaId, SucursalId, Fecha, Hora, NumeroFactura, Subtotal, Impuesto, Descuento, Total) 
-                                 VALUES (@EmpresaId, @SucursalId, @Fecha, @Hora, @NumeroFactura, @Subtotal, @Impuesto, @Descuento, @Total);
-                                 SELECT SCOPE_IDENTITY();";
+                             VALUES (@EmpresaId, @SucursalId, @Fecha, @Hora, @NumeroFactura, @Subtotal, @Impuesto, @Descuento, @Total);
+                             SELECT CAST(SCOPE_IDENTITY() as int)";
                     SqlCommand command = new SqlCommand(query, connection, transaction);
-                    command.Parameters.AddWithValue("@EmpresaId", factura.EmpresaId);
-                    command.Parameters.AddWithValue("@SucursalId", factura.SucursalId);
-                    command.Parameters.AddWithValue("@Fecha", factura.Fecha);
-                    command.Parameters.AddWithValue("@Hora", factura.Hora);
-                    command.Parameters.AddWithValue("@NumeroFactura", factura.NumeroFactura);
-                    command.Parameters.AddWithValue("@Subtotal", factura.Subtotal);
-                    command.Parameters.AddWithValue("@Impuesto", factura.Impuesto);
-                    command.Parameters.AddWithValue("@Descuento", factura.Descuento);
-                    command.Parameters.AddWithValue("@Total", factura.Total);
+                    command.Parameters.AddWithValue("@EmpresaId", empresaId);
+                    command.Parameters.AddWithValue("@SucursalId", sucursalId);
+                    command.Parameters.AddWithValue("@Fecha", facturaRequest.Fecha);
+                    command.Parameters.AddWithValue("@Hora", facturaRequest.Hora);
+                    command.Parameters.AddWithValue("@NumeroFactura", facturaRequest.NumeroFactura);
+                    command.Parameters.AddWithValue("@Subtotal", facturaRequest.Subtotal);
+                    command.Parameters.AddWithValue("@Impuesto", facturaRequest.Impuesto);
+                    command.Parameters.AddWithValue("@Descuento", facturaRequest.Descuento);
+                    command.Parameters.AddWithValue("@Total", facturaRequest.Total);
 
-                    int facturaId = Convert.ToInt32(command.ExecuteScalar());
-                    factura.Id = facturaId;
+                    int facturaId = (int)command.ExecuteScalar();
 
-                    AddFacturaProductos(factura.Productos, facturaId, connection, transaction);
+                    AddFacturaProductos(productos, facturaId, connection, transaction);
 
                     transaction.Commit();
                     return facturaId;
@@ -137,7 +137,7 @@ namespace Api_web.Repositories
             }
         }
 
-        public void Update(Factura factura)
+        public void Update(UpdateFacturaRequest facturaRequest, int empresaId, int sucursalId, List<FacturaProducto> productos)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -147,31 +147,31 @@ namespace Api_web.Repositories
                 try
                 {
                     string query = @"UPDATE Facturas 
-                                 SET EmpresaId = @EmpresaId, SucursalId = @SucursalId, Fecha = @Fecha, 
-                                     Hora = @Hora, NumeroFactura = @NumeroFactura, Subtotal = @Subtotal, 
-                                     Impuesto = @Impuesto, Descuento = @Descuento, Total = @Total 
-                                 WHERE Id = @Id";
+                             SET EmpresaId = @EmpresaId, SucursalId = @SucursalId, Fecha = @Fecha, 
+                                 Hora = @Hora, NumeroFactura = @NumeroFactura, Subtotal = @Subtotal, 
+                                 Impuesto = @Impuesto, Descuento = @Descuento, Total = @Total 
+                             WHERE Id = @Id";
                     SqlCommand command = new SqlCommand(query, connection, transaction);
-                    command.Parameters.AddWithValue("@Id", factura.Id);
-                    command.Parameters.AddWithValue("@EmpresaId", factura.EmpresaId);
-                    command.Parameters.AddWithValue("@SucursalId", factura.SucursalId);
-                    command.Parameters.AddWithValue("@Fecha", factura.Fecha);
-                    command.Parameters.AddWithValue("@Hora", factura.Hora);
-                    command.Parameters.AddWithValue("@NumeroFactura", factura.NumeroFactura);
-                    command.Parameters.AddWithValue("@Subtotal", factura.Subtotal);
-                    command.Parameters.AddWithValue("@Impuesto", factura.Impuesto);
-                    command.Parameters.AddWithValue("@Descuento", factura.Descuento);
-                    command.Parameters.AddWithValue("@Total", factura.Total);
+                    command.Parameters.AddWithValue("@Id", facturaRequest.Id);
+                    command.Parameters.AddWithValue("@EmpresaId", empresaId);
+                    command.Parameters.AddWithValue("@SucursalId", sucursalId);
+                    command.Parameters.AddWithValue("@Fecha", facturaRequest.Fecha);
+                    command.Parameters.AddWithValue("@Hora", facturaRequest.Hora);
+                    command.Parameters.AddWithValue("@NumeroFactura", facturaRequest.NumeroFactura);
+                    command.Parameters.AddWithValue("@Subtotal", facturaRequest.Subtotal);
+                    command.Parameters.AddWithValue("@Impuesto", facturaRequest.Impuesto);
+                    command.Parameters.AddWithValue("@Descuento", facturaRequest.Descuento);
+                    command.Parameters.AddWithValue("@Total", facturaRequest.Total);
 
                     int rowsAffected = command.ExecuteNonQuery();
                     if (rowsAffected == 0)
                     {
-                        throw new Exception($"No se encontró la factura con Id {factura.Id}");
+                        throw new Exception($"No se encontró la factura con Id {facturaRequest.Id}");
                     }
 
                     // Delete existing FacturaProductos and add new ones
-                    DeleteFacturaProductos(factura.Id, connection, transaction);
-                    AddFacturaProductos(factura.Productos, factura.Id, connection, transaction);
+                    DeleteFacturaProductos(facturaRequest.Id, connection, transaction);
+                    AddFacturaProductos(productos, facturaRequest.Id, connection, transaction);
 
                     transaction.Commit();
                 }
@@ -179,7 +179,7 @@ namespace Api_web.Repositories
                 {
                     transaction.Rollback();
                     // Log the exception
-                    throw new Exception($"Error al actualizar la factura con Id {factura.Id}", ex);
+                    throw new Exception($"Error al actualizar la factura con Id {facturaRequest.Id}", ex);
                 }
             }
         }
@@ -256,7 +256,7 @@ namespace Api_web.Repositories
         private void AddFacturaProductos(List<FacturaProducto> productos, int facturaId, SqlConnection connection, SqlTransaction transaction)
         {
             string query = @"INSERT INTO FacturaProductos (FacturaId, ProductoId, Cantidad, PrecioUnitario, Subtotal) 
-                         VALUES (@FacturaId, @ProductoId, @Cantidad, @PrecioUnitario, @Subtotal)";
+                     VALUES (@FacturaId, @ProductoId, @Cantidad, @PrecioUnitario, @Subtotal)";
             SqlCommand command = new SqlCommand(query, connection, transaction);
 
             foreach (var producto in productos)

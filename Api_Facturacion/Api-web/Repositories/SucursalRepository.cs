@@ -91,6 +91,44 @@ namespace Api_web.Repositories
             return null;
         }
 
+        public Sucursal GetByNombre(string nombre)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT Id, Nombre, Provincia, Distrito, Corregimiento, Urbanizacion, Calle, Local, EmpresaId FROM Sucursales WHERE Nombre = @Nombre";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Nombre", nombre);
+
+                try
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        return new Sucursal
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            Nombre = reader["Nombre"].ToString(),
+                            Provincia = reader["Provincia"].ToString(),
+                            Distrito = reader["Distrito"].ToString(),
+                            Corregimiento = reader["Corregimiento"].ToString(),
+                            Urbanizacion = reader["Urbanizacion"].ToString(),
+                            Calle = reader["Calle"].ToString(),
+                            Local = reader["Local"] as string,
+                            EmpresaId = Convert.ToInt32(reader["EmpresaId"])
+                        };
+                    }
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception
+                    throw new Exception($"Error al obtener la sucursal con nombre {nombre}", ex);
+                }
+            }
+            return null;
+        }
+
         public Sucursal Add(CreateSucursalRequest sucursalRequest, int empresaId)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))

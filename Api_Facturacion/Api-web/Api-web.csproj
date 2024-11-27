@@ -191,6 +191,11 @@
     <Compile Include="DTO\Empresa\CreateEmpresaRequest.cs" />
     <Compile Include="DTO\Empresa\EmpresaResponse.cs" />
     <Compile Include="DTO\Empresa\UpdateEmpresaRequest.cs" />
+    <Compile Include="DTO\Factura\CreateFacturaRequest.cs" />
+    <Compile Include="DTO\Factura\FacturaProductoRequest.cs" />
+    <Compile Include="DTO\Factura\FacturaProductoResponse.cs" />
+    <Compile Include="DTO\Factura\FacturaResponse.cs" />
+    <Compile Include="DTO\Factura\UpdateFacturaRequest.cs" />
     <Compile Include="DTO\Marca\CreateMarcaRequest.cs" />
     <Compile Include="DTO\Marca\MarcaResponse.cs" />
     <Compile Include="DTO\Marca\UpdateMarcaRequest.cs" />
@@ -237,6 +242,8 @@
     <Compile Include="Servicio\Categoria\ICategoriaService.cs" />
     <Compile Include="Servicio\Empresa\EmpresaService.cs" />
     <Compile Include="Servicio\Empresa\IEmpresaService.cs" />
+    <Compile Include="Servicio\Factura\FacturaService.cs" />
+    <Compile Include="Servicio\Factura\IFacturaService.cs" />
     <Compile Include="Servicio\Marca\IMarcaService.cs" />
     <Compile Include="Servicio\Marca\MarcaService.cs" />
     <Compile Include="Servicio\Producto\IProductoService.cs" />
@@ -316,7 +323,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Servicio\Factura\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\bootstrap.min.js.map" />
