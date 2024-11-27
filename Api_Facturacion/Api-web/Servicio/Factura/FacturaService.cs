@@ -14,6 +14,9 @@ namespace Api_web.Servicio.Factura
         private readonly EmpresaRepository _empresaRepository;
         private readonly SucursalRepository _sucursalRepository;
         private readonly ProductoRepository _productoRepository;
+        private readonly CategoriaRepository _categoriaRepository;
+        private readonly SubcategoriaRepository _subcategoriaRepository;
+        private readonly MarcaRepository _marcaRepository;
 
         public FacturaService()
         {
@@ -21,6 +24,9 @@ namespace Api_web.Servicio.Factura
             _empresaRepository = new EmpresaRepository();
             _sucursalRepository = new SucursalRepository();
             _productoRepository = new ProductoRepository();
+            _categoriaRepository = new CategoriaRepository();
+            _subcategoriaRepository = new SubcategoriaRepository();
+            _marcaRepository = new MarcaRepository();
         }
 
         public List<FacturaResponse> GetAllFacturas()
@@ -168,17 +174,54 @@ namespace Api_web.Servicio.Factura
                 Impuesto = factura.Impuesto,
                 Descuento = factura.Descuento,
                 Total = factura.Total,
-                Productos = factura.Productos.Select(fp => new FacturaProductoResponse
+                Productos = factura.Productos.Select(fp =>
                 {
-                    Producto = new DTO.Producto.ProductoResponse
+                    var producto = _productoRepository.GetById(fp.ProductoId);
+                    var categoria = _categoriaRepository.GetById(producto.CategoriaId);
+                    var subcategoria = _subcategoriaRepository.GetById(producto.SubcategoriaId);
+                    var marca = _marcaRepository.GetById(producto.MarcaId);
+
+                    return new FacturaProductoResponse
                     {
-                        Id = fp.ProductoId,
-                        // Fetch other product details as needed
-                        Nombre = _productoRepository.GetById(fp.ProductoId).Nombre
-                    },
-                    Cantidad = fp.Cantidad,
-                    PrecioUnitario = fp.PrecioUnitario,
-                    Subtotal = fp.Subtotal
+                        Producto = new DTO.Producto.ProductoResponse
+                        {
+                            Id = producto.Id,
+                            Nombre = producto.Nombre,
+                            Descripcion = producto.Descripcion,
+                            Categoria = new DTO.Categoria.CategoriaResponse
+                            {
+                                Id = categoria.Id,
+                                Nombre = categoria.Nombre
+                            },
+                            Subcategoria = new DTO.Subcategoria.SubcategoriaResponse
+                            {
+                                Id = subcategoria.Id,
+                                Nombre = subcategoria.Nombre,
+                                Categoria = new DTO.Categoria.CategoriaResponse
+                                {
+                                    Id = categoria.Id,
+                                    Nombre = categoria.Nombre
+                                },
+                            },
+                            Marca = new DTO.Marca.MarcaResponse
+                            {
+                                Id = marca.Id,
+                                Nombre = marca.Nombre
+                            },
+                            UnidadMedida = producto.UnidadMedida,
+                            Cantidad = producto.Cantidad,
+                            Precio = producto.Precio,
+                            Stock = producto.Stock,
+                            CodigoBarras = producto.CodigoBarras,
+                            FechaCreacion = producto.FechaCreacion,
+                            Estado = producto.Estado,
+                            Foto = producto.Foto,
+                            FechaModificacion = producto.FechaModificacion
+                        },
+                        Cantidad = fp.Cantidad,
+                        PrecioUnitario = fp.PrecioUnitario,
+                        Subtotal = fp.Subtotal
+                    };
                 }).ToList()
             };
         }
@@ -193,7 +236,6 @@ namespace Api_web.Servicio.Factura
                     throw new KeyNotFoundException($"No se encontró el producto con nombre {pr.Producto}");
                 }
 
-                // Asumimos que queremos el primer producto que coincida con el nombre
                 var producto = productos.First();
 
                 return new FacturaProducto
