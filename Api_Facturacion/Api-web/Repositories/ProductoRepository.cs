@@ -76,6 +76,28 @@ namespace Api_web.Repositories
             return productos;
         }
 
+        public List<Producto> GetProductosBySubcategoria(int subcategoriaId)
+        {
+            List<Producto> productos = new List<Producto>();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT * FROM Productos WHERE id_subcategoria = @SubcategoriaId";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@SubcategoriaId", subcategoriaId);
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    productos.Add(MapToProducto(reader));
+                }
+            }
+
+            return productos;
+        }
+
         public Producto GetByBarcode(string barcode)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))

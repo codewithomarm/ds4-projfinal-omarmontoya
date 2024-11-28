@@ -11,6 +11,7 @@ namespace Api_web.Servicio.Producto
         List<ProductoResponse> GetAllProductos();
         ProductoResponse GetProductoById(int id);
         List<ProductoResponse> GetProductosByCategory(string categoryName);
+        List<ProductoResponse> GetProductosBySubcategoria(string subcategoriaNombre);
         ProductoResponse GetProductoByBarcode(string barcode);
         List<ProductoResponse> SearchProductosByName(string name);
         ProductoResponse CreateProducto(CreateProductoRequest request);

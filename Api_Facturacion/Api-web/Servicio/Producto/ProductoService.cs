@@ -76,6 +76,25 @@ namespace Api_web.Servicio.Producto
             }
         }
 
+        public List<ProductoResponse> GetProductosBySubcategoria(string subcategoriaNombre)
+        {
+            try
+            {
+                var subcategoria = _subcategoriaRepository.GetByName(subcategoriaNombre).FirstOrDefault();
+                if (subcategoria == null)
+                {
+                    throw new KeyNotFoundException($"No se encontró la subcategoría con nombre '{subcategoriaNombre}'");
+                }
+                var productos = _productoRepository.GetProductosBySubcategoria(subcategoria.Id);
+                return productos.Select(MapToProductoResponse).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener productos para la subcategoría '{subcategoriaNombre}': {ex.Message}");
+                throw new Exception($"Error al obtener productos para la subcategoría '{subcategoriaNombre}'", ex);
+            }
+        }
+
         public ProductoResponse GetProductoByBarcode(string barcode)
         {
             try
