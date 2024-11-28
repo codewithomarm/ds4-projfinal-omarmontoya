@@ -60,18 +60,19 @@ namespace App_Facturacion
 
                     // Cargar información de la empresa
                     string empresaResponse = client.DownloadString($"https://localhost:44327/api/empresas/{Session["EmpresaId"]}");
-                    var empresa = new JavaScriptSerializer().Deserialize<dynamic>(empresaResponse);
+                    var empresa = new JavaScriptSerializer().Deserialize<EmpresaResponse>(empresaResponse);
 
                     // Cargar información de la sucursal
                     string sucursalResponse = client.DownloadString($"https://localhost:44327/api/sucursales/{Session["SucursalId"]}");
-                    var sucursal = new JavaScriptSerializer().Deserialize<dynamic>(sucursalResponse);
+                    var sucursal = new JavaScriptSerializer().Deserialize<SucursalResponse>(sucursalResponse);
 
-                    lblEmpresa.Text = $"Empresa: {empresa["Nombre"]}";
-                    lblSucursal.Text = $"Sucursal: {sucursal["Nombre"]}";
+                    lblEmpresa.Text = $"Empresa: {empresa.Nombre}";
+                    lblSucursal.Text = $"Sucursal: {sucursal.Nombre}";
                 }
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Error completo: {ex.ToString()}");
                 lblError.Text = "Error al cargar información de empresa y sucursal: " + ex.Message;
             }
         }
@@ -139,17 +140,17 @@ namespace App_Facturacion
                 return;
             }
 
-            CargarProductosPorSubcategoria(int.Parse(ddlSubcategoria.SelectedValue));
+            CargarProductosPorSubcategoria(ddlSubcategoria.SelectedItem.Text);
         }
 
-        private void CargarProductosPorSubcategoria(int subcategoriaId)
+        private void CargarProductosPorSubcategoria(string subcategoriaName)
         {
             try
             {
                 using (var client = new WebClient())
                 {
                     client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                    string response = client.DownloadString($"https://localhost:44327/api/productos/subcategoria/{subcategoriaId}");
+                    string response = client.DownloadString($"https://localhost:44327/api/productos/subcategoria/{subcategoriaName}");
                     var productos = new JavaScriptSerializer().Deserialize<List<ProductoResponse>>(response);
 
                     ddlProducto.Items.Clear();
