@@ -10,7 +10,7 @@ using System.Web;
 
 namespace Api_web.Servicio.Sucursal
 {
-    public class SucursalService
+    public class SucursalService : ISucursalService
     {
         private readonly SucursalRepository _sucursalRepository = new SucursalRepository();
         private readonly EmpresaRepository _empresaRepository = new EmpresaRepository();
@@ -45,6 +45,30 @@ namespace Api_web.Servicio.Sucursal
                 // Log the exception
                 throw new Exception($"Error al obtener la sucursal con Id {id}", ex);
             }
+        }
+
+        public List<SucursalResponse> GetSucursalesByEmpresaId(int empresaId)
+        {
+            var sucursales = _sucursalRepository.GetSucursalesByEmpresaId(empresaId);
+            var empresa = _empresaRepository.GetById(empresaId);
+
+            return sucursales.Select(s => new SucursalResponse
+            {
+                Id = s.Id,
+                Nombre = s.Nombre,
+                Provincia = s.Provincia,
+                Distrito = s.Distrito,
+                Corregimiento = s.Corregimiento,
+                Urbanizacion = s.Urbanizacion,
+                Calle = s.Calle,
+                Local = s.Local,
+                Empresa = new DTO.Empresa.EmpresaResponse
+                {
+                    Id = empresa.Id,
+                    RUC = empresa.RUC,
+                    Nombre = empresa.Nombre
+                }
+            }).ToList();
         }
 
         public SucursalResponse CreateSucursal(CreateSucursalRequest request)

@@ -11,6 +11,7 @@ namespace Api_web.Servicio.Sucursal
     {
         List<SucursalResponse> GetAllSucursales();
         SucursalResponse GetSucursalById(int id);
+        List<SucursalResponse> GetSucursalesByEmpresaId(int empresaId);
         SucursalResponse CreateSucursal(CreateSucursalRequest request);
         SucursalResponse UpdateSucursal(UpdateSucursalRequest request);
         void DeleteSucursal(int id);

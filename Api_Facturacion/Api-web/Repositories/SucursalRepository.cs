@@ -129,6 +129,45 @@ namespace Api_web.Repositories
             return null;
         }
 
+        public List<Sucursal> GetSucursalesByEmpresaId(int empresaId)
+        {
+            List<Sucursal> sucursales = new List<Sucursal>();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(
+                    "SELECT s.Id, s.Nombre, s.Provincia, s.Distrito, s.Corregimiento, s.Urbanizacion, s.Calle, s.Local, " +
+                    "e.Id AS EmpresaId, e.RUC, e.Nombre AS EmpresaNombre " +
+                    "FROM Sucursales s " +
+                    "INNER JOIN Empresas e ON s.EmpresaId = e.Id " +
+                    "WHERE s.EmpresaId = @EmpresaId", connection);
+
+                command.Parameters.AddWithValue("@EmpresaId", empresaId);
+
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        sucursales.Add(new Sucursal
+                        {
+                            Id = (int)reader["Id"],
+                            Nombre = reader["Nombre"].ToString(),
+                            Provincia = reader["Provincia"].ToString(),
+                            Distrito = reader["Distrito"].ToString(),
+                            Corregimiento = reader["Corregimiento"].ToString(),
+                            Urbanizacion = reader["Urbanizacion"].ToString(),
+                            Calle = reader["Calle"].ToString(),
+                            Local = reader["Local"].ToString(),
+                            EmpresaId = (int)reader["EmpresaId"]
+                        });
+                    }
+                }
+            }
+
+            return sucursales;
+        }
+
         public Sucursal Add(CreateSucursalRequest sucursalRequest, int empresaId)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
