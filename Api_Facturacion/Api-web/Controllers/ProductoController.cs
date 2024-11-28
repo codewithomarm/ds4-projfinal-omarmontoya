@@ -77,6 +77,34 @@ namespace Api_web.Controllers
         }
 
         [HttpGet]
+        [Route("subcategoria/{subcategoriaNombre}")]
+        public IHttpActionResult GetProductosBySubcategoria(string subcategoriaNombre)
+        {
+            if (string.IsNullOrWhiteSpace(subcategoriaNombre))
+            {
+                return BadRequest("El nombre de la subcategoría no puede estar vacío.");
+            }
+
+            try
+            {
+                var productos = _productoService.GetProductosBySubcategoria(subcategoriaNombre);
+                if (productos == null || !productos.Any())
+                {
+                    return NotFound();
+                }
+                return Ok(productos);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
         [Route("barcode/{barcode}")]
         public IHttpActionResult GetProductoByBarcode(string barcode)
         {

@@ -57,6 +57,21 @@ namespace Api_web.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("empresa/{empresaId:int}")]
+        public IHttpActionResult GetSucursalesPorEmpresa(int empresaId)
+        {
+            try
+            {
+                var sucursales = _sucursalService.GetSucursalesByEmpresaId(empresaId);
+                return Ok(sucursales);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
         [HttpPost]
         [Route("")]
         public IHttpActionResult CreateSucursal([FromBody] CreateSucursalRequest sucursalRequest)

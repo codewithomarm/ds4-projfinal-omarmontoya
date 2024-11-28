@@ -163,7 +163,7 @@ namespace Api_web.Controllers
             try
             {
                 bool isValid = _usuarioService.VerifyPassword(request.NombreUsuario, request.Contrasena);
-                return Ok(new { IsValid = isValid });
+                return Ok(new { isValid = isValid }); // Asegurarse de que la propiedad se llame 'isValid'
             }
             catch (Exception ex)
             {
