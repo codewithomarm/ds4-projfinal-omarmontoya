@@ -19,6 +19,7 @@ namespace App_Facturacion.Models
         public string Nombre { get; set; }
         public decimal Precio { get; set; }
         public int Cantidad { get; set; }
+        public string CodigoBarras { get; set; }
         public decimal Subtotal { get { return Precio * Cantidad; } }
     }
 
