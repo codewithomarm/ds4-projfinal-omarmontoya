@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.UI;
@@ -232,7 +234,8 @@ namespace App_Facturacion
                     Id = producto.Id,
                     Nombre = producto.Nombre,
                     Precio = producto.Precio,
-                    Cantidad = 1
+                    Cantidad = 1,
+                    CodigoBarras = producto.Barcode
                 });
             }
 
@@ -309,16 +312,144 @@ namespace App_Facturacion
 
             try
             {
-                // Aquí implementaremos la lógica para guardar la factura
-                // Por ahora solo limpiamos la factura
-                ProductosEnFactura.Clear();
-                ActualizarGridProductos();
-                CalcularTotales();
-                lblError.Text = "Factura procesada exitosamente";
+                using (var client = new WebClient())
+                {
+                    client.Headers[HttpRequestHeader.ContentType] = "application/json";
+                    client.Headers[HttpRequestHeader.Accept] = "application/json";
+
+                    try
+                    {
+                        // Fetch empresa details
+                        string empresaUrl = $"https://localhost:44327/api/empresas/nombre/{lblEmpresa.Text.Replace("Empresa: ", "")}";
+                        System.Diagnostics.Debug.WriteLine($"Fetching empresa: {empresaUrl}");
+                        string empresaResponse = client.DownloadString(empresaUrl);
+                        var empresa = new JavaScriptSerializer().Deserialize<EmpresaResponse>(empresaResponse);
+                        System.Diagnostics.Debug.WriteLine($"Empresa response: {empresaResponse}");
+
+                        // Fetch sucursal details
+                        string sucursalUrl = $"https://localhost:44327/api/sucursales/empresa/{empresa.Id}";
+                        System.Diagnostics.Debug.WriteLine($"Fetching sucursal: {sucursalUrl}");
+                        string sucursalResponse = client.DownloadString(sucursalUrl);
+                        var sucursales = new JavaScriptSerializer().Deserialize<List<SucursalResponse>>(sucursalResponse);
+                        System.Diagnostics.Debug.WriteLine($"Sucursal response: {sucursalResponse}");
+                        var sucursal = sucursales.FirstOrDefault(s => s.Nombre == lblSucursal.Text.Replace("Sucursal: ", ""));
+
+                        // Fetch next factura number
+                        string numeroFacturaUrl = "https://localhost:44327/api/facturas/siguiente-numero";
+                        System.Diagnostics.Debug.WriteLine($"Fetching numero factura: {numeroFacturaUrl}");
+                        string numeroFacturaResponse = client.DownloadString(numeroFacturaUrl);
+                        System.Diagnostics.Debug.WriteLine($"Numero factura response: {numeroFacturaResponse}");
+                        var numeroFacturaObj = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(numeroFacturaResponse);
+                        string numeroFactura = numeroFacturaObj["numeroFactura"].ToString();
+
+                        decimal subtotal = ProductosEnFactura.Sum(p => p.Subtotal);
+                        decimal descuentoPorcentaje = decimal.Parse(ddlDescuento.SelectedValue);
+                        decimal descuento = subtotal * descuentoPorcentaje;
+                        decimal subtotalConDescuento = subtotal - descuento;
+                        decimal impuesto = subtotalConDescuento * IMPUESTO_RATE;
+                        decimal total = subtotalConDescuento + impuesto;
+
+                        var facturaActual = new FacturaActual
+                        {
+                            EmpresaNombre = empresa.Nombre,
+                            EmpresaRUC = empresa.RUC,
+                            SucursalNombre = sucursal.Nombre,
+                            SucursalProvincia = sucursal.Provincia,
+                            SucursalDistrito = sucursal.Distrito,
+                            SucursalCorregimiento = sucursal.Corregimiento,
+                            SucursalUrbanizacion = sucursal.Urbanizacion,
+                            SucursalCalle = sucursal.Calle,
+                            SucursalLocal = sucursal.Local,
+                            NumeroFactura = numeroFactura,
+                            Fecha = DateTime.Now,
+                            Productos = ProductosEnFactura,
+                            Subtotal = subtotal,
+                            Descuento = descuento,
+                            Impuesto = impuesto,
+                            Total = total
+                        };
+
+                        // Create the request object for the API
+                        var facturaRequest = new
+                        {
+                            Empresa = facturaActual.EmpresaNombre,
+                            Sucursal = facturaActual.SucursalNombre,
+                            Fecha = facturaActual.Fecha.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                            Hora = facturaActual.Fecha.ToString("HH:mm:ss"),
+                            NumeroFactura = facturaActual.NumeroFactura,
+                            Subtotal = facturaActual.Subtotal,
+                            Impuesto = facturaActual.Impuesto,
+                            Descuento = facturaActual.Descuento,
+                            Total = facturaActual.Total,
+                            Productos = facturaActual.Productos.Select(p => new
+                            {
+                                Producto = p.Nombre,
+                                Cantidad = p.Cantidad,
+                                PrecioUnitario = p.Precio,
+                                Subtotal = p.Subtotal
+                            }).ToList()
+                        };
+
+                        // Serialize the request object
+                        string jsonRequest = new JavaScriptSerializer().Serialize(facturaRequest);
+
+                        // Send POST request to save the invoice
+                        string apiUrl = "https://localhost:44327/api/facturas";
+
+                        // Log the request for debugging
+                        System.Diagnostics.Debug.WriteLine($"Request URL: {apiUrl}");
+                        System.Diagnostics.Debug.WriteLine($"Request Body: {jsonRequest}");
+
+                        client.Headers[HttpRequestHeader.ContentType] = "application/json";
+                        byte[] requestBytes = Encoding.UTF8.GetBytes(jsonRequest);
+                        byte[] responseBytes = client.UploadData(apiUrl, "POST", requestBytes);
+                        string response = Encoding.UTF8.GetString(responseBytes);
+
+                        // Log the response for debugging
+                        System.Diagnostics.Debug.WriteLine($"Response: {response}");
+
+                        // Deserialize the response
+                        var result = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(response);
+
+                        // Check if the invoice was saved successfully
+                        if (result.ContainsKey("id"))
+                        {
+                            // Invoice saved successfully
+                            Session["FacturaActual"] = facturaActual;
+                            Response.Redirect("VerFactura.aspx");
+                        }
+                        else
+                        {
+                            // Error saving invoice
+                            lblError.Text = "Error al guardar la factura en la base de datos.";
+                        }
+
+                    }
+                    catch (WebException webEx)
+                    {
+                        var response = webEx.Response as HttpWebResponse;
+                        if (response != null)
+                        {
+                            using (var reader = new StreamReader(response.GetResponseStream()))
+                            {
+                                string responseText = reader.ReadToEnd();
+                                System.Diagnostics.Debug.WriteLine($"Error response: {responseText}");
+                            }
+                            lblError.Text = $"Error {(int)response.StatusCode}: {response.StatusDescription}. URL: {webEx.Response.ResponseUri}";
+                        }
+                        else
+                        {
+                            lblError.Text = $"Error en la solicitud web: {webEx.Message}";
+                        }
+                        return;
+                    }
+
+                }  
             }
             catch (Exception ex)
             {
                 lblError.Text = "Error al procesar la factura: " + ex.Message;
+                System.Diagnostics.Debug.WriteLine($"Exception details: {ex}");
             }
         }
     }
