@@ -11,6 +11,7 @@ namespace Api_web.Servicio.Factura
     {
         List<FacturaResponse> GetAllFacturas();
         FacturaResponse GetFacturaById(int id);
+        string GetSiguienteNumeroFactura();
         FacturaResponse CreateFactura(CreateFacturaRequest request);
         FacturaResponse UpdateFactura(UpdateFacturaRequest request);
         void DeleteFactura(int id);

@@ -57,6 +57,21 @@ namespace Api_web.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("siguiente-numero")]
+        public IHttpActionResult GetSiguienteNumeroFactura()
+        {
+            try
+            {
+                var siguienteNumero = _facturaService.GetSiguienteNumeroFactura();
+                return Ok(new { NumeroFactura = siguienteNumero });
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
         [HttpPost]
         [Route("")]
         public IHttpActionResult CreateFactura([FromBody] CreateFacturaRequest facturaRequest)

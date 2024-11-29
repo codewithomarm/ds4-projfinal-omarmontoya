@@ -61,6 +61,12 @@ namespace Api_web.Servicio.Factura
             }
         }
 
+        public string GetSiguienteNumeroFactura()
+        {
+            var ultimoId = _facturaRepository.GetUltimoId();
+            return (ultimoId + 1).ToString("D5");
+        }
+
         public FacturaResponse CreateFactura(CreateFacturaRequest request)
         {
             try

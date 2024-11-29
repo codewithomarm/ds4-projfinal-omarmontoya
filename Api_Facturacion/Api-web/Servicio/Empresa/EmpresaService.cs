@@ -44,6 +44,17 @@ namespace Api_web.Servicio.Empresa
             }
         }
 
+        public EmpresaResponse GetEmpresaByNombre(string nombre)
+        {
+            var empresa = _empresaRepository.GetByNombre(nombre);
+            if (empresa == null)
+            {
+                throw new KeyNotFoundException($"No se encontró la empresa con nombre '{nombre}'");
+            }
+
+            return MapToEmpresaResponse(empresa);
+        }
+
         public EmpresaResponse CreateEmpresa(CreateEmpresaRequest request)
         {
             try

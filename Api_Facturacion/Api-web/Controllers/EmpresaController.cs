@@ -52,7 +52,25 @@ namespace Api_web.Controllers
             }
         }
 
-        // POST: api/empresas
+        [HttpGet]
+        [Route("nombre/{nombre}")]
+        public IHttpActionResult GetEmpresaByNombre(string nombre)
+        {
+            try
+            {
+                var empresa = _empresaService.GetEmpresaByNombre(nombre);
+                if (empresa == null)
+                {
+                    return NotFound();
+                }
+                return Ok(empresa);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
         [HttpPost]
         [Route("")]
         public IHttpActionResult CreateEmpresa([FromBody] CreateEmpresaRequest empresaRequest)

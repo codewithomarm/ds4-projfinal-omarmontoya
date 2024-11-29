@@ -12,6 +12,7 @@ namespace Api_web.Servicio.Empresa
     {
         List<EmpresaResponse> GetAllEmpresas();
         EmpresaResponse GetEmpresaById(int id);
+        EmpresaResponse GetEmpresaByNombre(string nombre);
         EmpresaResponse CreateEmpresa(CreateEmpresaRequest request);
         EmpresaResponse UpdateEmpresa(UpdateEmpresaRequest request);
         void DeleteEmpresa(int id);

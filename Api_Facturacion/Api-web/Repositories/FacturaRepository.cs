@@ -98,6 +98,27 @@ namespace Api_web.Repositories
             return null;
         }
 
+        public int GetUltimoId()
+        {
+            int ultimoId = 0;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT ISNULL(MAX(Id), 0) FROM Facturas";
+                SqlCommand command = new SqlCommand(query, connection);
+
+                connection.Open();
+                object result = command.ExecuteScalar();
+
+                if (result != null && result != DBNull.Value)
+                {
+                    ultimoId = Convert.ToInt32(result);
+                }
+            }
+
+            return ultimoId;
+        }
+
         public int Add(CreateFacturaRequest facturaRequest, int empresaId, int sucursalId, List<FacturaProducto> productos)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
