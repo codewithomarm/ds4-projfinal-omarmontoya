@@ -19,7 +19,7 @@ namespace App_Facturacion
         {
             if (User.Identity.IsAuthenticated)
             {
-                Response.Redirect("~/SeleccionEmpresa.aspx");
+                RedirectBasedOnRole();
             }
         }
 
@@ -28,10 +28,13 @@ namespace App_Facturacion
             string usuario = txtUsuario.Text;
             string contrasena = txtContrasena.Text;
 
-            if (ValidarUsuario(usuario, contrasena))
+            var (isValid, role) = ValidarUsuario(usuario, contrasena);
+
+            if (isValid)
             {
                 FormsAuthentication.SetAuthCookie(usuario, false);
-                Response.Redirect("~/SeleccionEmpresa.aspx");
+                Session["UserRole"] = role;
+                RedirectBasedOnRole();
             }
             else
             {
@@ -39,13 +42,28 @@ namespace App_Facturacion
             }
         }
 
-        private bool ValidarUsuario(string usuario, string contrasena)
+        private void RedirectBasedOnRole()
+        {
+            string role = Session["UserRole"] as string;
+            if (role == "ADMIN")
+            {
+                Response.Redirect("~/SeleccionEmpresaAdmin.aspx");
+            }
+            else
+            {
+                Response.Redirect("~/SeleccionEmpresa.aspx");
+            }
+        }
+
+        private (bool isValid, string role) ValidarUsuario(string usuario, string contrasena)
         {
             using (var client = new WebClient())
             {
                 client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                string url = "https://localhost:44327/api/usuarios/verificar-contrasena";
-                string data = new JavaScriptSerializer().Serialize(new
+
+                // Step 1: Verify password
+                string verifyUrl = "https://localhost:44327/api/usuarios/verificar-contrasena";
+                string verifyData = new JavaScriptSerializer().Serialize(new
                 {
                     NombreUsuario = usuario,
                     Contrasena = contrasena
@@ -53,42 +71,73 @@ namespace App_Facturacion
 
                 try
                 {
-                    string response = client.UploadString(url, "POST", data);
-                    // Imprimir la respuesta para debug
-                    System.Diagnostics.Debug.WriteLine("API Response: " + response);
+                    System.Diagnostics.Debug.WriteLine($"Sending verify password request to: {verifyUrl}");
+                    System.Diagnostics.Debug.WriteLine($"Verify password request data: {verifyData}");
 
-                    // Deserializar la respuesta directamente a un objeto anónimo
-                    var result = new JavaScriptSerializer().Deserialize<dynamic>(response);
+                    string verifyResponse = client.UploadString(verifyUrl, "POST", verifyData);
+                    System.Diagnostics.Debug.WriteLine("Verify Password API Response: " + verifyResponse);
 
-                    // Verificar si la propiedad existe antes de acceder a ella
-                    if (result != null && result.ContainsKey("isValid"))
+                    var verifyResult = new JavaScriptSerializer().Deserialize<dynamic>(verifyResponse);
+
+                    if (verifyResult != null && verifyResult.ContainsKey("isValid") && (bool)verifyResult["isValid"])
                     {
-                        return (bool)result["isValid"];
+                        // Step 2: Get user role
+                        string getRoleUrl = "https://localhost:44327/api/usuarios/buscar";
+                        string getRoleData = new JavaScriptSerializer().Serialize(new
+                        {
+                            nombreUsuario = usuario
+                        });
+
+                        System.Diagnostics.Debug.WriteLine($"Sending get role request to: {getRoleUrl}");
+                        System.Diagnostics.Debug.WriteLine($"Get role request data: {getRoleData}");
+
+                        // Asegurarse de que el Content-Type esté configurado para cada solicitud
+                        client.Headers[HttpRequestHeader.ContentType] = "application/json";
+                        string getRoleResponse = client.UploadString(getRoleUrl, "POST", getRoleData);
+                        System.Diagnostics.Debug.WriteLine("Get Role API Response: " + getRoleResponse);
+
+                        var userInfo = new JavaScriptSerializer().Deserialize<dynamic>(getRoleResponse);
+
+                        if (userInfo != null && userInfo.ContainsKey("rol") && userInfo["rol"].ContainsKey("nombre"))
+                        {
+                            string role = userInfo["rol"]["nombre"];
+                            System.Diagnostics.Debug.WriteLine($"User role: {role}");
+                            return (true, role);
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine("User role information not found in the response");
+                        }
                     }
-                    else if (result != null && result.ContainsKey("IsValid"))
+                    else
                     {
-                        return (bool)result["IsValid"];
+                        System.Diagnostics.Debug.WriteLine("Invalid or unexpected verify password response format");
                     }
 
-                    // Si no encontramos la propiedad esperada, retornamos false
-                    return false;
+                    return (false, "USER");
                 }
                 catch (WebException ex)
                 {
-                    // Capturar y mostrar el error específico
-                    using (var reader = new StreamReader(ex.Response.GetResponseStream()))
+                    System.Diagnostics.Debug.WriteLine($"WebException: {ex.Message}");
+                    if (ex.Response != null)
                     {
-                        string errorResponse = reader.ReadToEnd();
-                        System.Diagnostics.Debug.WriteLine("API Error: " + errorResponse);
+                        using (var reader = new StreamReader(ex.Response.GetResponseStream()))
+                        {
+                            string errorResponse = reader.ReadToEnd();
+                            System.Diagnostics.Debug.WriteLine("API Error Response: " + errorResponse);
+                        }
                     }
-                    return false;
+                    return (false, "USER");
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("Error general: " + ex.Message);
-                    return false;
+                    System.Diagnostics.Debug.WriteLine($"General Exception: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
+                    return (false, "USER");
                 }
             }
         }
+
+
     }
 }

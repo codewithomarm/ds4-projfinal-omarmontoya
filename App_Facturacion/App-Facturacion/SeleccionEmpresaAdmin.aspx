@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Selección de Empresa y Sucursal" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SeleccionEmpresa.aspx.cs" Inherits="App_Facturacion.SeleccionEmpresa" %>
+﻿<%@ Page Title="Selección de Empresa y Sucursal" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SeleccionEmpresaAdmin.aspx.cs" Inherits="App_Facturacion.SeleccionEmpresaAdmin" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container mt-5">
