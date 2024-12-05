@@ -19,7 +19,7 @@ namespace App_Facturacion
         {
             if (User.Identity.IsAuthenticated)
             {
-                Response.Redirect("~/MenuPrincipal.aspx");
+                Response.Redirect("~/SeleccionEmpresa.aspx");
             }
         }
 
@@ -31,7 +31,7 @@ namespace App_Facturacion
             if (ValidarUsuario(usuario, contrasena))
             {
                 FormsAuthentication.SetAuthCookie(usuario, false);
-                Response.Redirect("~/MenuPrincipal.aspx");
+                Response.Redirect("~/SeleccionEmpresa.aspx");
             }
             else
             {

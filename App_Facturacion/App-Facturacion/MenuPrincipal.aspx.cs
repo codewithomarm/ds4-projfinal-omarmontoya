@@ -24,6 +24,11 @@ namespace App_Facturacion
 
         protected void btnFacturar_Click(object sender, EventArgs e)
         {
+            Response.Redirect("Facturacion.aspx");
+        }
+
+        protected void btnVolverSeleccionEmpresa_Click(object sender, EventArgs e)
+        {
             Response.Redirect("SeleccionEmpresa.aspx");
         }
     }

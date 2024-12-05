@@ -452,5 +452,10 @@ namespace App_Facturacion
                 System.Diagnostics.Debug.WriteLine($"Exception details: {ex}");
             }
         }
+
+        protected void btnVolverMenuPrincipal_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("MenuPrincipal.aspx");
+        }
     }
 }

@@ -2,6 +2,13 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container mt-5">
+        <!-- Botón Volver -->
+        <div class="row mb-4">
+            <div class="col">
+                <asp:Button ID="btnCerrarSesion" runat="server" Text="Cerrar Sesión" 
+                    CssClass="btn btn-secondary" OnClick="btnCerrarSesion_Click" />
+            </div>
+        </div>
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">

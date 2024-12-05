@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Script.Serialization;
+using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -116,8 +117,15 @@ namespace App_Facturacion
                 int sucursalId = int.Parse(ddlSucursal.SelectedValue);
                 Session["EmpresaId"] = empresaId;
                 Session["SucursalId"] = sucursalId;
-                Response.Redirect("Facturacion.aspx");
+                Response.Redirect("MenuPrincipal.aspx");
             }
+        }
+
+        protected void btnCerrarSesion_Click(object sender, EventArgs e)
+        {
+            FormsAuthentication.SignOut();
+            Session.Clear();
+            Response.Redirect("Login.aspx");
         }
     }
 
