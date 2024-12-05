@@ -25,11 +25,6 @@ namespace App_Facturacion
             Response.Redirect("SeleccionEmpresaAdmin.aspx");
         }
 
-        protected void btnAdministrarUsuarios_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("AdministrarUsuarios.aspx");
-        }
-
         protected void btnAdministrarProductos_Click(object sender, EventArgs e)
         {
             Response.Redirect("AdministrarProductos.aspx");

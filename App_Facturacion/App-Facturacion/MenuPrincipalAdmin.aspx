@@ -22,9 +22,6 @@
         <h2 class="text-center mb-4">Menú Principal Administrador</h2>
         
         <div class="row justify-content-center d-grid gap-3 center-content">
-            <asp:Button ID="btnAdministrarUsuarios" runat="server" Text="Administrar Usuarios" 
-                CssClass="btn btn-primary btn-lg" OnClick="btnAdministrarUsuarios_Click" />
-
             <asp:Button ID="btnAdministrarProductos" runat="server" Text="Administrar Productos" 
                 CssClass="btn btn-success btn-lg" OnClick="btnAdministrarProductos_Click" />
 

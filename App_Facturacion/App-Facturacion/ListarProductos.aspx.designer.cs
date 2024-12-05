@@ -11,34 +11,25 @@ namespace App_Facturacion
 {
 
 
-    public partial class MenuPrincipalAdmin
+    public partial class ListarProductos
     {
 
         /// <summary>
-        /// Control btnVolverSeleccionEmpresa.
+        /// Control gvProductos.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnVolverSeleccionEmpresa;
+        protected global::System.Web.UI.WebControls.GridView gvProductos;
 
         /// <summary>
-        /// Control btnAdministrarProductos.
+        /// Control btnVolver.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAdministrarProductos;
-
-        /// <summary>
-        /// Control btnReportes.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnReportes;
+        protected global::System.Web.UI.WebControls.Button btnVolver;
     }
 }

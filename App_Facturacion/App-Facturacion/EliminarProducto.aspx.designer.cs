@@ -11,124 +11,115 @@ namespace App_Facturacion
 {
 
 
-    public partial class Reportes
+    public partial class EliminarProducto
     {
 
         /// <summary>
-        /// Control btnVolverMenuPrincipalAdmin.
+        /// Control txtProductoId.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnVolverMenuPrincipalAdmin;
+        protected global::System.Web.UI.WebControls.TextBox txtProductoId;
 
         /// <summary>
-        /// Control lblEmpresa.
+        /// Control btnBuscarProducto.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblEmpresa;
+        protected global::System.Web.UI.WebControls.Button btnBuscarProducto;
 
         /// <summary>
-        /// Control lblSucursal.
+        /// Control pnlProductoInfo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSucursal;
+        protected global::System.Web.UI.WebControls.Panel pnlProductoInfo;
 
         /// <summary>
-        /// Control txtFechaInicial.
+        /// Control lblNombre.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFechaInicial;
+        protected global::System.Web.UI.WebControls.Label lblNombre;
 
         /// <summary>
-        /// Control txtFechaFinal.
+        /// Control lblCategoria.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFechaFinal;
+        protected global::System.Web.UI.WebControls.Label lblCategoria;
 
         /// <summary>
-        /// Control btnGenerarReporte.
+        /// Control lblSubcategoria.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnGenerarReporte;
+        protected global::System.Web.UI.WebControls.Label lblSubcategoria;
 
         /// <summary>
-        /// Control pnlResumenVentas.
+        /// Control lblPrecio.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlResumenVentas;
+        protected global::System.Web.UI.WebControls.Label lblPrecio;
 
         /// <summary>
-        /// Control lblSubtotal.
+        /// Control lblMarca.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSubtotal;
+        protected global::System.Web.UI.WebControls.Label lblMarca;
 
         /// <summary>
-        /// Control lblImpuestos.
+        /// Control lblStock.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblImpuestos;
+        protected global::System.Web.UI.WebControls.Label lblStock;
 
         /// <summary>
-        /// Control lblDescuentos.
+        /// Control lblCodigoBarras.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDescuentos;
+        protected global::System.Web.UI.WebControls.Label lblCodigoBarras;
 
         /// <summary>
-        /// Control lblGranTotal.
+        /// Control btnEliminarProducto.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblGranTotal;
+        protected global::System.Web.UI.WebControls.Button btnEliminarProducto;
 
         /// <summary>
-        /// Control pnlProductosVendidos.
+        /// Control btnVolver.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlProductosVendidos;
-
-        /// <summary>
-        /// Control gvProductosVendidos.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvProductosVendidos;
+        protected global::System.Web.UI.WebControls.Button btnVolver;
     }
 }

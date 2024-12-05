@@ -142,6 +142,11 @@ namespace App_Facturacion
             pnlResumenVentas.Visible = true;
             pnlProductosVendidos.Visible = true;
         }
+
+        protected void btnVolverMenuPrincipalAdmin_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("MenuPrincipalAdmin.aspx");
+        }
     }
 
     public class FacturaAdmin

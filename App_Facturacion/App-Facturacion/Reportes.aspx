@@ -2,6 +2,13 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container mt-4">
+        <!-- Botón Volver -->
+        <div class="row mb-4">
+            <div class="col">
+                <asp:Button ID="btnVolverMenuPrincipalAdmin" runat="server" Text="← Volver a Menu Principal" 
+                    CssClass="btn btn-secondary" OnClick="btnVolverMenuPrincipalAdmin_Click" />
+            </div>
+        </div>
         <h2 class="mb-4">Reportes de Ventas</h2>
 
         <!-- Información de Empresa y Sucursal -->
