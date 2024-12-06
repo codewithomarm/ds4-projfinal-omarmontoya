@@ -1,0 +1,7 @@
+Usuario con rol 'USER':
+usuario: 'omar.montoya.user'
+contraseña: 'password'
+
+Usuario con rol 'ADMIN'
+usuario: 'omar.montoya.admin'
+password: 'password'
