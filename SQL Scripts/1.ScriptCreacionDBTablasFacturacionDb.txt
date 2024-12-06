@@ -1,0 +1,149 @@
+USE master
+GO
+
+-- Create the database if it doesn't exist
+IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = 'facturaciondb')
+BEGIN
+    CREATE DATABASE [facturaciondb]
+END
+GO
+
+USE [facturaciondb]
+GO
+
+-- Create Categorias table
+CREATE TABLE [dbo].[Categorias] (
+    [id_categoria] INT IDENTITY(1,1) NOT NULL,
+    [nombre] VARCHAR(50) NOT NULL,
+    CONSTRAINT [PK_Categorias] PRIMARY KEY CLUSTERED ([id_categoria] ASC),
+    CONSTRAINT [UQ_Categorias_nombre] UNIQUE NONCLUSTERED ([nombre] ASC)
+)
+GO
+
+-- Create Subcategorias table
+CREATE TABLE [dbo].[Subcategorias] (
+    [id_subcategoria] INT IDENTITY(1,1) NOT NULL,
+    [nombre] VARCHAR(50) NOT NULL,
+    [id_categoria] INT NOT NULL,
+    CONSTRAINT [PK_Subcategorias] PRIMARY KEY CLUSTERED ([id_subcategoria] ASC),
+    CONSTRAINT [FK_Subcategorias_Categorias] FOREIGN KEY ([id_categoria]) REFERENCES [dbo].[Categorias] ([id_categoria])
+)
+GO
+
+-- Create Marcas table
+CREATE TABLE [dbo].[Marcas] (
+    [id_marca] INT IDENTITY(1,1) NOT NULL,
+    [nombre] VARCHAR(50) NOT NULL,
+    CONSTRAINT [PK_Marcas] PRIMARY KEY CLUSTERED ([id_marca] ASC),
+    CONSTRAINT [UQ_Marcas_nombre] UNIQUE NONCLUSTERED ([nombre] ASC)
+)
+GO
+
+-- Create Empresas table
+CREATE TABLE [dbo].[Empresas] (
+    [id] INT IDENTITY(1,1) NOT NULL,
+    [RUC] CHAR(13) NOT NULL,
+    [Nombre] NVARCHAR(100) NOT NULL,
+    CONSTRAINT [PK_Empresas] PRIMARY KEY CLUSTERED ([id] ASC),
+    CONSTRAINT [UQ_Empresas_RUC] UNIQUE NONCLUSTERED ([RUC] ASC)
+)
+GO
+
+-- Create Roles table
+CREATE TABLE [dbo].[Roles] (
+    [id_rol] INT IDENTITY(1,1) NOT NULL,
+    [nombre] VARCHAR(50) NOT NULL,
+    CONSTRAINT [PK_Roles] PRIMARY KEY CLUSTERED ([id_rol] ASC),
+    CONSTRAINT [UQ_Roles_nombre] UNIQUE NONCLUSTERED ([nombre] ASC)
+)
+GO
+
+-- Create Usuarios table
+CREATE TABLE [dbo].[Usuarios] (
+    [id_usuario] INT IDENTITY(1,1) NOT NULL,
+    [nombre_usuario] VARCHAR(50) NOT NULL,
+    [contrasena] VARCHAR(255) NOT NULL,
+    [nombre_completo] VARCHAR(100) NOT NULL,
+    [id_rol] INT NOT NULL,
+    [fecha_creacion] DATETIME NULL DEFAULT (GETDATE()),
+    [ultimo_acceso] DATETIME NULL,
+    [estado] VARCHAR(10) NULL DEFAULT ('activo'),
+    CONSTRAINT [PK_Usuarios] PRIMARY KEY CLUSTERED ([id_usuario] ASC),
+    CONSTRAINT [UQ_Usuarios_nombre_usuario] UNIQUE NONCLUSTERED ([nombre_usuario] ASC),
+    CONSTRAINT [FK_Usuarios_Roles] FOREIGN KEY ([id_rol]) REFERENCES [dbo].[Roles] ([id_rol]),
+    CONSTRAINT [CK_Usuarios_estado] CHECK ([estado] IN ('activo', 'inactivo'))
+)
+GO
+
+-- Create Sucursales table
+CREATE TABLE [dbo].[Sucursales] (
+    [id] INT IDENTITY(1,1) NOT NULL,
+    [Nombre] NVARCHAR(100) NOT NULL,
+    [Provincia] NVARCHAR(50) NOT NULL,
+    [Distrito] NVARCHAR(50) NOT NULL,
+    [Corregimiento] NVARCHAR(50) NOT NULL,
+    [Urbanizacion] NVARCHAR(100) NOT NULL,
+    [Calle] NVARCHAR(100) NOT NULL,
+    [Local] NVARCHAR(50) NULL,
+    [EmpresaId] INT NOT NULL,
+    CONSTRAINT [PK_Sucursales] PRIMARY KEY CLUSTERED ([id] ASC),
+    CONSTRAINT [FK_Sucursales_Empresas] FOREIGN KEY ([EmpresaId]) REFERENCES [dbo].[Empresas] ([id])
+)
+GO
+
+-- Create Productos table
+CREATE TABLE [dbo].[Productos] (
+    [id_producto] INT IDENTITY(1,1) NOT NULL,
+    [nombre] VARCHAR(100) NOT NULL,
+    [descripcion] TEXT NULL,
+    [id_categoria] INT NOT NULL,
+    [id_subcategoria] INT NOT NULL,
+    [id_marca] INT NOT NULL,
+    [unidad_medida] VARCHAR(20) NOT NULL,
+    [cantidad] DECIMAL(10, 2) NOT NULL,
+    [precio] DECIMAL(10, 2) NOT NULL,
+    [stock] INT NOT NULL,
+    [codigo_barras] VARCHAR(13) NOT NULL,
+    [fecha_creacion] DATETIME NULL DEFAULT (GETDATE()),
+    [estado] VARCHAR(10) NULL DEFAULT ('activo'),
+    [foto] VARCHAR(255) NULL,
+    [fecha_modificacion] DATETIME NULL,
+    CONSTRAINT [PK_Productos] PRIMARY KEY CLUSTERED ([id_producto] ASC),
+    CONSTRAINT [UQ_Productos_codigo_barras] UNIQUE NONCLUSTERED ([codigo_barras] ASC),
+    CONSTRAINT [FK_Productos_Categorias] FOREIGN KEY ([id_categoria]) REFERENCES [dbo].[Categorias] ([id_categoria]),
+    CONSTRAINT [FK_Productos_Subcategorias] FOREIGN KEY ([id_subcategoria]) REFERENCES [dbo].[Subcategorias] ([id_subcategoria]),
+    CONSTRAINT [FK_Productos_Marcas] FOREIGN KEY ([id_marca]) REFERENCES [dbo].[Marcas] ([id_marca]),
+    CONSTRAINT [CK_Productos_estado] CHECK ([estado] IN ('activo', 'inactivo'))
+)
+GO
+
+-- Create Facturas table
+CREATE TABLE [dbo].[Facturas] (
+    [id] INT IDENTITY(1,1) NOT NULL,
+    [EmpresaId] INT NOT NULL,
+    [SucursalId] INT NOT NULL,
+    [Fecha] DATE NOT NULL,
+    [Hora] TIME(7) NOT NULL,
+    [NumeroFactura] CHAR(5) NOT NULL,
+    [Subtotal] DECIMAL(10, 2) NOT NULL,
+    [Impuesto] DECIMAL(10, 2) NOT NULL,
+    [Descuento] DECIMAL(10, 2) NOT NULL,
+    [Total] DECIMAL(10, 2) NOT NULL,
+    CONSTRAINT [PK_Facturas] PRIMARY KEY CLUSTERED ([id] ASC),
+    CONSTRAINT [FK_Facturas_Empresas] FOREIGN KEY ([EmpresaId]) REFERENCES [dbo].[Empresas] ([id]),
+    CONSTRAINT [FK_Facturas_Sucursales] FOREIGN KEY ([SucursalId]) REFERENCES [dbo].[Sucursales] ([id])
+)
+GO
+
+-- Create FacturaProductos table
+CREATE TABLE [dbo].[FacturaProductos] (
+    [FacturaId] INT NOT NULL,
+    [ProductoId] INT NOT NULL,
+    [Cantidad] INT NOT NULL,
+    [PrecioUnitario] DECIMAL(10, 2) NOT NULL,
+    [Subtotal] DECIMAL(10, 2) NOT NULL,
+    CONSTRAINT [PK_FacturaProductos] PRIMARY KEY CLUSTERED ([FacturaId] ASC, [ProductoId] ASC),
+    CONSTRAINT [FK_FacturaProductos_Facturas] FOREIGN KEY ([FacturaId]) REFERENCES [dbo].[Facturas] ([id]),
+    CONSTRAINT [FK_FacturaProductos_Productos] FOREIGN KEY ([ProductoId]) REFERENCES [dbo].[Productos] ([id_producto])
+)
+GO

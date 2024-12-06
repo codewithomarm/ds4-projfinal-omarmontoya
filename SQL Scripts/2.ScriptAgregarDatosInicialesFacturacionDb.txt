@@ -1,0 +1,195 @@
+USE [facturaciondb]
+GO
+
+-- Insertar datos en la tabla Categorias
+SET IDENTITY_INSERT [dbo].[Categorias] ON
+
+INSERT INTO [dbo].[Categorias] ([id_categoria], [nombre])
+VALUES 
+    (1, 'Frutas y Verduras'),
+    (2, 'Carnes y Pescados'),
+    (3, 'Lácteos y Huevos'),
+    (4, 'Panadería y Cereales'),
+    (5, 'Bebidas'),
+    (8, 'Tabaco y Accesorios')
+
+SET IDENTITY_INSERT [dbo].[Categorias] OFF
+
+-- Insertar datos en la tabla Subcategorias
+SET IDENTITY_INSERT [dbo].[Subcategorias] ON
+
+INSERT INTO [dbo].[Subcategorias] ([id_subcategoria], [nombre], [id_categoria])
+VALUES 
+    (1, 'Frutas Frescas', 1),
+    (2, 'Verduras de Hoja', 1),
+    (3, 'Tubérculos', 1),
+    (4, 'Carnes Rojas', 2),
+    (5, 'Aves', 2),
+    (6, 'Pescados y Mariscos', 2),
+    (7, 'Leche y Alternativas', 3),
+    (8, 'Quesos', 3),
+    (9, 'Yogurt y Huevos', 3),
+    (10, 'Pan', 4),
+    (11, 'Cereales', 4),
+    (12, 'Galletas y Snacks', 4),
+    (13, 'Refrescos', 5),
+    (14, 'Jugos', 5),
+    (15, 'Agua', 5),
+    (16, 'Cigarrillos', 8)
+
+SET IDENTITY_INSERT [dbo].[Subcategorias] OFF
+
+-- Insertar datos en la tabla Marcas
+SET IDENTITY_INSERT [dbo].[Marcas] ON
+
+INSERT INTO [dbo].[Marcas] ([id_marca], [nombre])
+VALUES 
+    (1, 'Marca Frutas'),
+    (2, 'Marca Carnes'),
+    (3, 'Marca Lácteos'),
+    (4, 'Marca Panadería'),
+    (5, 'Marca Bebidas'),
+    (7, 'Marca Tabacos')
+
+SET IDENTITY_INSERT [dbo].[Marcas] OFF
+
+-- Insertar datos en la tabla Empresas
+SET IDENTITY_INSERT [dbo].[Empresas] ON
+
+INSERT INTO [dbo].[Empresas] ([id], [RUC], [Nombre])
+VALUES 
+    (1, '1458924601734', 'Supermercados Wan Xin')
+
+SET IDENTITY_INSERT [dbo].[Empresas] OFF
+
+-- Insertar datos en la tabla Roles
+SET IDENTITY_INSERT [dbo].[Roles] ON
+
+INSERT INTO [dbo].[Roles] ([id_rol], [nombre])
+VALUES 
+    (1, 'USER'),
+    (2, 'ADMIN')
+
+SET IDENTITY_INSERT [dbo].[Roles] OFF
+
+-- Insertar datos en la tabla Usuarios
+SET IDENTITY_INSERT [dbo].[Usuarios] ON
+
+INSERT INTO [dbo].[Usuarios] ([id_usuario], [nombre_usuario], [contrasena], [nombre_completo], [id_rol], [fecha_creacion], [ultimo_acceso], [estado])
+VALUES 
+    (1, 'omar.montoya.admin', '$2a$11$B.Ra/XNuywAu8S1.lt7P3.h2Nr1ZBPYQbNMLVEmeDf5LkUmfrQm/2', 'Omar Montoya', 2, '2024-11-25 17:26:44.440', NULL, 'activo'),
+    (2, 'omar.montoya.user', '$2a$11$uWjQHh9jGTc01P9QUrJB5eIhcwuNk7hgNltrrTcvDVmAYmKMfziny', 'Omar Montoya', 1, '2024-11-25 17:33:27.573', NULL, 'activo')
+
+SET IDENTITY_INSERT [dbo].[Usuarios] OFF
+
+-- Insertar datos en la tabla Sucursales
+SET IDENTITY_INSERT [dbo].[Sucursales] ON
+
+INSERT INTO [dbo].[Sucursales] ([id], [Nombre], [Provincia], [Distrito], [Corregimiento], [Urbanizacion], [Calle], [Local], [EmpresaId])
+VALUES 
+    (1, 'Wan Xin #1', 'Panama', 'San Miguelito', 'Jose D. Espinar', 'El Crisol', 'Principal', '25', 1)
+
+SET IDENTITY_INSERT [dbo].[Sucursales] OFF
+
+-- Insertar datos en la tabla Productos
+SET IDENTITY_INSERT [dbo].[Productos] ON
+
+INSERT INTO [dbo].[Productos] ([id_producto], [nombre], [descripcion], [id_categoria], [id_subcategoria], [id_marca], [unidad_medida], [cantidad], [precio], [stock], [codigo_barras], [fecha_creacion], [estado], [foto], [fecha_modificacion])
+VALUES 
+    (3, 'Manzanas', NULL, 1, 1, 1, 'kg', 1.00, 2.50, 100, '7891234567890', '2024-11-25 08:57:01.957', 'activo', 'https://drive.google.com/uc?export=view&id=1AkS5_Sq68wFCk-qJxg45onRYnelfvGz0', NULL),
+    (4, 'Plátanos', NULL, 1, 1, 1, 'kg', 1.00, 1.80, 150, '7892345678901', '2024-11-25 08:57:01.957', 'activo', 'https://drive.google.com/uc?export=view&id=1cwBCY6QQsjafKohAkgfrlYjM_gH3YnOi', NULL),
+    (5, 'Naranjas', 'Naranjas de color naranja', 1, 1, 1, 'kg', 1.00, 2.00, 120, '7893456789012', '2024-11-25 08:57:01.957', 'activo', 'https://drive.google.com/uc?export=view&id=18cb24ZRqnTuXc1HtwKgbR9SNaJM9piYr', '2024-12-05 19:09:05.653'),
+    (6, 'Lechuga', NULL, 1, 2, 1, 'unidad', 1.00, 1.20, 80, '7894567890123', '2024-11-25 08:57:01.957', 'activo', 'https://drive.google.com/uc?export=view&id=1CoaE7f40WPtSesoRuUr-8yH7vH_dD9L1', NULL),
+    (7, 'Espinaca', NULL, 1, 2, 1, 'kg', 0.50, 2.50, 60, '7895678901234', '2024-11-25 08:57:01.957', 'activo', 'https://drive.google.com/uc?export=view&id=1ZqM5I9JUm-WwJv3z-Mc-kszqUG8AIwLb', NULL),
+    (8, 'Acelga', NULL, 1, 2, 1, 'kg', 0.50, 2.00, 70, '7896789012345', '2024-11-25 08:57:01.957', 'activo', 'https://drive.google.com/uc?export=view&id=1bSbdmRKs45qT_Zs_RGMQ7Mfxp276kaOK', NULL),
+    (9, 'Papas', NULL, 1, 3, 1, 'kg', 1.00, 1.50, 200, '7897890123456', '2024-11-25 08:57:01.957', 'activo', 'https://drive.google.com/uc?export=view&id=1BH2U8hc2EIjuHadFiYlwy6s8rLRyXDEz', NULL),
+    (10, 'Zanahorias', 'Un kilogramo de Zanahorias', 1, 3, 1, 'kg', 1.00, 1.80, 155, '7898901234567', '2024-11-25 08:57:01.957', 'activo', 'https://drive.google.com/uc?export=view&id=1TCY5gVRDeGvUbkqPCF9ICQw_UlH1THPi', '2024-12-05 13:59:06.173'),
+    (11, 'Cebollas', NULL, 1, 3, 1, 'kg', 1.00, 1.60, 180, '7899012345678', '2024-11-25 08:57:01.957', 'activo', 'https://drive.google.com/uc?export=view&id=13_xpTYYdlnIDg198qOvJs7dkOxm0PdFM', NULL),
+    (12, 'Bistec de res', NULL, 2, 4, 2, 'kg', 1.00, 12.00, 50, '7890123456789', '2024-11-25 08:57:11.643', 'activo', 'https://drive.google.com/uc?export=view&id=1Ci1A8TiqDl6w5UC_2ETKu9NHKl8BqtRB', NULL),
+    (13, 'Chuletas de cerdo', NULL, 2, 4, 2, 'kg', 1.00, 10.00, 60, '7891234567891', '2024-11-25 08:57:11.643', 'activo', 'https://drive.google.com/uc?export=view&id=1tkQW4jcE-nGQRevXD4jQ3-hSA1WSbBPV', NULL),
+    (14, 'Carne molida', NULL, 2, 4, 2, 'kg', 1.00, 8.00, 70, '7892345678902', '2024-11-25 08:57:11.643', 'activo', 'https://drive.google.com/uc?export=view&id=14LNrjspNkkPNhfqCCCq4288sP8RTxVb8', NULL),
+    (15, 'Pechuga de pollo', NULL, 2, 5, 2, 'kg', 1.00, 9.00, 80, '7893456789013', '2024-11-25 08:57:11.643', 'activo', 'https://drive.google.com/uc?export=view&id=1X6r68rcs61a3LbAGQx8wTQv3UJ7RzxDW', NULL),
+    (16, 'Muslos de pollo', NULL, 2, 5, 2, 'kg', 1.00, 7.00, 90, '7894567890124', '2024-11-25 08:57:11.643', 'activo', 'https://drive.google.com/uc?export=view&id=1QIwJ4fB8VmWaPEhMJSEctn_dKdgW-yP5', NULL),
+    (17, 'Pavo entero', NULL, 2, 5, 2, 'kg', 3.00, 25.00, 30, '7895678901235', '2024-11-25 08:57:11.643', 'activo', 'https://drive.google.com/uc?export=view&id=1ZZWT8ePfYTgDCVbEgSWTITapQAxlpIrr', NULL),
+    (18, 'Filete de salmón', NULL, 2, 6, 2, 'kg', 0.50, 15.00, 40, '7896789012346', '2024-11-25 08:57:11.643', 'activo', 'https://drive.google.com/uc?export=view&id=1VJLcxkNVEYQn4Ac-ExcYqUh5t10tlJXd', NULL),
+    (19, 'Camarones', NULL, 2, 6, 2, 'kg', 0.50, 18.00, 35, '7897890123457', '2024-11-25 08:57:11.643', 'activo', 'https://drive.google.com/uc?export=view&id=1rMPqPIgm7UWfpJUrZ958w9WEe7F2aRez', NULL),
+    (20, 'Atún en lata', NULL, 2, 6, 2, 'unidad', 0.35, 2.50, 200, '7898901234568', '2024-11-25 08:57:11.643', 'activo', 'https://drive.google.com/uc?export=view&id=1amoL1Sw7p1EmDfD-nCp4j520pq3TN8qj', NULL),
+    (21, 'Leche entera', NULL, 3, 7, 3, 'litro', 1.00, 2.00, 100, '7899012345679', '2024-11-25 08:57:17.917', 'activo', 'https://drive.google.com/uc?export=view&id=1K6iGpWTBOl-Y8ATJ51stfvYGWn3demmX', NULL),
+    (22, 'Leche descremada', NULL, 3, 7, 3, 'litro', 1.00, 2.20, 90, '7890123456790', '2024-11-25 08:57:17.917', 'activo', 'https://drive.google.com/uc?export=view&id=1KXwo41HTy69yTUi57HZfMqcWaXY7InYZ', NULL),
+    (23, 'Leche de almendra', NULL, 3, 7, 3, 'litro', 1.00, 3.50, 50, '7891234567892', '2024-11-25 08:57:17.917', 'activo', 'https://drive.google.com/uc?export=view&id=1xRRkkX5VB7NTKreWuh3QbXZbjpYRvho7', NULL),
+    (24, 'Queso cheddar', NULL, 3, 8, 3, 'kg', 0.25, 5.00, 60, '7892345678903', '2024-11-25 08:57:17.917', 'activo', 'https://drive.google.com/uc?export=view&id=1PnAEo6_kejyctX9EwNsr6I8vfEJ0m0io', NULL),
+    (25, 'Queso mozzarella', NULL, 3, 8, 3, 'kg', 0.25, 4.50, 70, '7893456789014', '2024-11-25 08:57:17.917', 'activo', 'https://drive.google.com/uc?export=view&id=148xzWZ-mp2ZplmpLH2mBNcB_zT0e7g5G', NULL),
+    (26, 'Queso crema', NULL, 3, 8, 3, 'kg', 0.30, 3.00, 80, '7894567890125', '2024-11-25 08:57:17.917', 'activo', 'https://drive.google.com/uc?export=view&id=18eF7oWhLVnl1K5MHcP03_GG3heuiby9K', NULL),
+    (27, 'Yogurt natural', NULL, 3, 9, 3, 'kg', 0.50, 2.50, 100, '7895678901236', '2024-11-25 08:57:17.917', 'activo', 'https://drive.google.com/uc?export=view&id=1DoIs4QhOA9txmolebIa1Tf5nc1uTlBmX', NULL),
+    (28, 'Yogurt de frutas', NULL, 3, 9, 3, 'kg', 0.50, 3.00, 90, '7896789012347', '2024-11-25 08:57:17.917', 'activo', 'https://drive.google.com/uc?export=view&id=1eCxHubw00EBlmKGlRPIwyL2d8jGvgkOi', NULL),
+    (29, 'Huevos (docena)', NULL, 3, 9, 3, 'docena', 1.00, 3.50, 150, '7897890123458', '2024-11-25 08:57:17.917', 'activo', 'https://drive.google.com/uc?export=view&id=1pmtDSItYnrPgEMlsLTkVjX61jg5wONsE', NULL),
+    (30, 'Pan blanco', NULL, 4, 10, 4, 'unidad', 0.50, 1.50, 100, '7898901234569', '2024-11-25 08:57:22.620', 'activo', 'https://drive.google.com/uc?export=view&id=18jfFh7rZG8u3ynJ-uoYSG4hhxBUKgEEL', NULL),
+    (31, 'Pan integral', NULL, 4, 10, 4, 'unidad', 0.50, 2.00, 80, '7899012345680', '2024-11-25 08:57:22.620', 'activo', 'https://drive.google.com/uc?export=view&id=1MYskB4AW-JcszJD3OJzEwVXzo3JvzwBu', NULL),
+    (32, 'Pan de molde', NULL, 4, 10, 4, 'unidad', 0.70, 2.50, 70, '7890123456791', '2024-11-25 08:57:22.620', 'activo', 'https://drive.google.com/uc?export=view&id=1GT23lu1Z0g1eD9Xdv9QpiFJA4Tv8Z-Jr', NULL),
+    (33, 'Avena', NULL, 4, 11, 4, 'kg', 0.50, 2.00, 120, '7891234567893', '2024-11-25 08:57:22.620', 'activo', 'https://drive.google.com/uc?export=view&id=1EOaJTSCCVURXHBJlg1hy4FD2HdmfiUI2', NULL),
+    (34, 'Corn Flakes', NULL, 4, 11, 4, 'kg', 0.50, 3.00, 100, '7892345678904', '2024-11-25 08:57:22.620', 'activo', 'https://drive.google.com/uc?export=view&id=14uRLdIrhLpwo2DzWrkcYIY_cvus3H2BH', NULL),
+    (35, 'Granola', NULL, 4, 11, 4, 'kg', 0.50, 4.00, 80, '7893456789015', '2024-11-25 08:57:22.620', 'activo', 'https://drive.google.com/uc?export=view&id=1BrtR6NFBa2Wcuc32yc13xiE3-7uv1LP7', NULL),
+    (36, 'Galletas saladas', NULL, 4, 12, 4, 'unidad', 0.20, 1.50, 150, '7894567890126', '2024-11-25 08:57:22.620', 'activo', 'https://drive.google.com/uc?export=view&id=1BGVoa7w--dTeTwdeVD8sbxIwK1a-c1Cw', NULL),
+    (37, 'Galletas dulces', NULL, 4, 12, 4, 'unidad', 0.30, 2.00, 130, '7895678901237', '2024-11-25 08:57:22.620', 'activo', 'https://drive.google.com/uc?export=view&id=1y3naKmCUq6fzt-yl6CfYrPinZOdlx2lu', NULL),
+    (38, 'Chips de papa', NULL, 4, 12, 4, 'unidad', 0.15, 1.80, 200, '7896789012348', '2024-11-25 08:57:22.620', 'activo', 'https://drive.google.com/uc?export=view&id=14OUgW0nxhFMm9c_NEE1SNml7FkvVOMnw', NULL),
+    (39, 'Coca-Cola', NULL, 5, 13, 5, 'litro', 2.00, 2.50, 200, '7897890123459', '2024-11-25 08:57:33.507', 'activo', 'https://drive.google.com/uc?export=view&id=1R2isB5j6FnOI8S8r9Q0GROw-OpJGvi2Y', NULL),
+    (40, 'Sprite', NULL, 5, 13, 5, 'litro', 2.00, 2.30, 180, '7898901234570', '2024-11-25 08:57:33.507', 'activo', 'https://drive.google.com/uc?export=view&id=1awX3ICMM1m9jRbI70BVABt4pY41R1wcn', NULL),
+    (41, 'Fanta', NULL, 5, 13, 5, 'litro', 2.00, 2.30, 170, '7899012345681', '2024-11-25 08:57:33.507', 'activo', 'https://drive.google.com/uc?export=view&id=1Qzqhh_upFp4wldAK2rhNumM987VkD1-J', NULL),
+    (42, 'Jugo de naranja', NULL, 5, 14, 5, 'litro', 1.00, 3.00, 100, '7890123456792', '2024-11-25 08:57:33.507', 'activo', 'https://drive.google.com/uc?export=view&id=1B-NTONyUt0lwewQ1bq4zKo85sdB_q7pT', NULL),
+    (43, 'Jugo de manzana', NULL, 5, 14, 5, 'litro', 1.00, 2.80, 90, '7891234567894', '2024-11-25 08:57:33.507', 'activo', 'https://drive.google.com/uc?export=view&id=1gd1qhp1XlUO7rJk6MAOqySopixOAi2GA', NULL),
+    (44, 'Jugo multifrutas', NULL, 5, 14, 5, 'litro', 1.00, 3.20, 80, '7892345678905', '2024-11-25 08:57:33.507', 'activo', 'https://drive.google.com/uc?export=view&id=1jBKb2IoK7oOmEWrYN51UUXmmxyzVbRC-', NULL),
+    (45, 'Agua mineral', NULL, 5, 15, 5, 'litro', 1.50, 1.00, 300, '7893456789016', '2024-11-25 08:57:33.507', 'activo', 'https://drive.google.com/uc?export=view&id=1rdsE6PO9lgpkkLf_zqkbwKdjuxTLL7LT', NULL),
+    (46, 'Agua con gas', NULL, 5, 15, 5, 'litro', 1.50, 1.20, 250, '7894567890127', '2024-11-25 08:57:33.507', 'activo', 'https://drive.google.com/uc?export=view&id=1R4-b-QpXIzcZTF7f6hoaKfKxaA0QiRHm', NULL),
+    (47, 'Agua saborizada', NULL, 5, 15, 5, 'litro', 1.50, 1.50, 200, '7895678901238', '2024-11-25 08:57:33.507', 'activo', 'https://drive.google.com/uc?export=view&id=1-YxdrjFpHqFwgDX4RhtKOSZ8xVcfGmyn', NULL),
+    (48, 'Cig Rojos', 'Paquete de 20 cigarrillos de tipo rojos', 8, 16, 7, 'unidad', 1.00, 5.75, 50, '7896789012349', '2024-11-25 15:41:32.317', 'activo', 'https://drive.google.com/uc?export=view&id=1DvRd_DKP79LZq9vVdaxANPxNrLpezrjV', '2024-11-25 15:44:13.930'),
+    (49, 'Cig Menta', 'Paquete de 20 cigarrillos de menta', 8, 16, 7, 'unidad', 1.00, 6.00, 55, '7996789012349', '2024-12-05 14:09:57.783', 'activo', 'N/A', NULL),
+    (50, 'Cig Mora', '20 cigarrillos de sabor mora', 8, 16, 7, 'unidad', 1.00, 6.50, 60, '7996789012350', '2024-12-05 19:10:41.420', 'activo', 'N/A', NULL)
+
+SET IDENTITY_INSERT [dbo].[Productos] OFF
+
+-- Insertar datos en la tabla Facturas
+SET IDENTITY_INSERT [dbo].[Facturas] ON
+
+INSERT INTO [dbo].[Facturas] ([id], [EmpresaId], [SucursalId], [Fecha], [Hora], [NumeroFactura], [Subtotal], [Impuesto], [Descuento], [Total])
+VALUES 
+    (1, 1, 1, '2023-06-15', '14:30:00.0000000', '00001', 10.00, 0.07, 0.00, 10.07),
+    (2, 1, 1, '2023-06-15', '14:35:00.0000000', '00002', 5.75, 0.40, 0.00, 6.15),
+    (3, 1, 1, '2023-06-15', '14:35:00.0000000', '00003', 10.75, 0.40, 0.00, 12.15),
+    (4, 1, 1, '2024-11-29', '02:38:27.0000000', '00004', 4.60, 0.32, 0.00, 4.92),
+    (5, 1, 1, '2024-11-29', '02:41:44.0000000', '00005', 14.75, 1.03, 0.00, 15.78),
+    (6, 1, 1, '2024-11-29', '02:43:48.0000000', '00006', 3.40, 0.24, 0.00, 3.64),
+    (7, 1, 1, '2024-12-03', '11:21:55.0000000', '00007', 3.00, 0.19, 0.30, 2.89),
+    (8, 1, 1, '2024-12-04', '13:06:05.0000000', '00008', 20.90, 1.24, 3.14, 19.01),
+    (9, 1, 1, '2024-12-04', '14:40:00.0000000', '00009', 12.80, 0.90, 0.00, 13.70),
+    (10, 1, 1, '2024-12-04', '22:02:38.0000000', '00010', 8.00, 0.50, 0.80, 7.70),
+    (11, 1, 1, '2024-12-05', '00:11:07.0000000', '00011', 8.00, 0.56, 0.00, 8.56),
+    (12, 1, 1, '2024-12-05', '16:19:25.0000000', '00012', 30.00, 2.10, 0.00, 32.10),
+    (13, 1, 1, '2024-12-05', '18:13:41.0000000', '00013', 47.50, 2.99, 4.75, 45.74),
+    (14, 1, 1, '2024-12-05', '19:06:48.0000000', '00014', 30.50, 1.92, 3.05, 29.37)
+
+SET IDENTITY_INSERT [dbo].[Facturas] OFF
+
+-- Insertar datos en la tabla FacturaProductos
+INSERT INTO [dbo].[FacturaProductos] ([FacturaId], [ProductoId], [Cantidad], [PrecioUnitario], [Subtotal])
+VALUES 
+    (1, 5, 5, 2.00, 10.00),
+    (2, 48, 1, 5.75, 5.75),
+    (3, 48, 4, 5.75, 5.75),
+    (4, 40, 2, 2.30, 4.60),
+    (5, 21, 2, 2.00, 4.00),
+    (5, 24, 1, 5.00, 5.00),
+    (5, 48, 1, 5.75, 5.75),
+    (6, 45, 1, 1.00, 1.00),
+    (6, 46, 2, 1.20, 2.40),
+    (7, 45, 3, 1.00, 3.00),
+    (8, 3, 5, 2.50, 12.50),
+    (8, 43, 3, 2.80, 8.40),
+    (9, 44, 4, 3.20, 12.80),
+    (10, 31, 2, 2.00, 4.00),
+    (10, 45, 4, 1.00, 4.00),
+    (11, 33, 4, 2.00, 8.00),
+    (12, 26, 10, 3.00, 30.00),
+    (13, 12, 3, 12.00, 36.00),
+    (13, 48, 2, 5.75, 11.50),
+    (14, 7, 5, 2.50, 12.50),
+    (14, 49, 3, 6.00, 18.00)
